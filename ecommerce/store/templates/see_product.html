@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+    <h1>{{ product.name }}</h1>
+
+    {% if there_is_stok %}
+        <img src="{{ product.image.url }}" width="300" heigth="450">  
+        <p>Product: {{ product.name }}</p>
+        <p>Price: {{ product.price }}</p>
+
+        {% if color_selected %}
+            Color: {{ color_selected }} 
+        {% endif %}
+
+        {% for color in colors %}
+            {{ color.name }}
+            <a href="{% url 'see_product' product.id color.id %}">
+                <i class="fa-solid fa-circle" style="color: {{ color.code }};"></i>
+            </a>
+        {% endfor %}
+
+        {% if size %}
+            <p>select the size:<p>
+            {% for size in sizes %}
+                <button>{{ size }}</button>
+            {% endfor %}
+        {% endif %}
+        <br>
+        <button>Add to Cart</button>
+    {% else %}
+        <p>Out of Stok</p>
+    {% endif %}
+    
+
+    
+
+   
+{% endblock %}
