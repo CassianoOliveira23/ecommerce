@@ -20,10 +20,10 @@ def see_product(request, id_product, id_color=None):
     there_is_stok = False
     colors = {}
     sizes = {}
-    color_selected=None         #reassistir aula  27 e corrigir os erros
+    color_selected=None         
     
     if id_color:
-        color = Color.get(id=id_color)
+        color = Color.objects.get(id=id_color)
         color_selected = color.name
     product = Product.objects.get(id=id_product)
     stok_item = StokItem.objects.filter(product=product, quantity__gt=0)# gt: Greater than
@@ -34,7 +34,7 @@ def see_product(request, id_product, id_color=None):
             stok_item = StokItem.objects.filter(product=product, quantity__gt=0, color__id=id_color)
             sizes = { item.size for item in stok_item }
    
-    context = {"product": product, "stok_item": stok_item, "there_is_stok": there_is_stok, "colors": colors, "size": sizes, "color_selected": color_selected}
+    context = {"product": product, "stok_item": stok_item, "there_is_stok": there_is_stok, "colors": colors, "sizes": sizes, "color_selected": color_selected}
     return render(request,'see_product.html', context)
 
 
