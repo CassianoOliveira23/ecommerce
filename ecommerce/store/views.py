@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 
 
@@ -20,11 +20,10 @@ def see_product(request, id_product, id_color=None):
     there_is_stok = False
     colors = {}
     sizes = {}
-    color_selected=None         
+    selected_color=None         
     
     if id_color:
-        color = Color.objects.get(id=id_color)
-        color_selected = color.name
+        selected_color = Color.objects.get(id=id_color)
     product = Product.objects.get(id=id_product)
     stok_item = StokItem.objects.filter(product=product, quantity__gt=0)# gt: Greater than
     if len(stok_item) > 0:
@@ -34,12 +33,29 @@ def see_product(request, id_product, id_color=None):
             stok_item = StokItem.objects.filter(product=product, quantity__gt=0, color__id=id_color)
             sizes = { item.size for item in stok_item }
    
-    context = {"product": product, "stok_item": stok_item, "there_is_stok": there_is_stok, "colors": colors, "sizes": sizes, "color_selected": color_selected}
+    context = {"product": product, "there_is_stok": there_is_stok, "colors": colors, "sizes": sizes, "selected_color": selected_color}
     return render(request,'see_product.html', context)
 
 
 def cart(request):
     return render(request, 'cart.html')
+
+
+def addto_cart(request, id_product):
+    if request.method == 'POST' and id_product:
+        data = request.POST.dict()
+        print(data)
+        id_color = data.get("color")
+        size = data.get("size")
+        if not size:
+            return redirect('store')
+        return redirect('cart')
+    else:
+        return redirect('store')
+    
+    # take customer
+    #create the order
+        
 
 
 def checkout(request):
