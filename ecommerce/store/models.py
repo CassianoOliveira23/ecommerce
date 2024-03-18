@@ -8,6 +8,8 @@ class Customer(models.Model):
     fone = models.CharField(max_length=200, null=True, blank=True)
     id_section = models.CharField(max_length=200, null=True, blank=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.email)
  
 
 class ProductCategory(models.Model):
@@ -63,10 +65,13 @@ class Address(models.Model):
     
 class Order(models.Model):
     customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)
-    completed = models.BooleanField(default=False)
+    done = models.BooleanField(default=False)
     transaction_code = models.CharField(max_length=200, null=True, blank=True)
     address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
-    data_completed = models.DateTimeField(null=True, blank=True)
+    complete_date = models.DateTimeField(null=True, blank=True)
+    
+    def __str__(self):
+        return f"Customer: {self.customer.email} | id_order: {self.id} | Done: {self.done}"
     
 
 class OrderItem(models.Model):
@@ -74,6 +79,8 @@ class OrderItem(models.Model):
     quantity = models.IntegerField(default=0)
     order = models.ForeignKey(Order, null=True, blank=True, on_delete=models.SET_NULL)
     
+    def __str__(self):
+        return f"order_id: {self.order.id} | Product: {self.stok_item.product}, {self.stok_item.size}, {self.stok_item.color.name}"
     
 
 class Banner(models.Model):
