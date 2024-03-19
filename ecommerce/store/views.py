@@ -38,7 +38,12 @@ def see_product(request, id_product, id_color=None):
 
 
 def cart(request):
-    return render(request, 'cart.html')
+    if request.user.is_authenticated:
+        customer = request.user.customer
+    order, created = Order.objects.get_or_create(customer=customer, done=False)
+    order_items = OrderItem.objects.filter(order=order)
+    context = {"order_items": order_items, "order": order }
+    return render(request, 'cart.html', context)
 
 
 def addto_cart(request, id_product):
