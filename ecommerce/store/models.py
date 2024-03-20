@@ -73,6 +73,20 @@ class Order(models.Model):
     def __str__(self):
         return f"Customer: {self.customer.email} | id_order: {self.id} | Done: {self.done}"
     
+    
+    @property
+    def total_price(self):
+        order_items = OrderItem.objects.filter(order__id=self.id)
+        price = sum( [item.total_price for item in order_items])
+        return price
+    
+    @property
+    def total_quantity(self):
+        order_items = OrderItem.objects.filter(order__id=self.id)
+        quantity = sum( [item.quantity for item in order_items])
+        return quantity
+    
+    
 
 class OrderItem(models.Model):
     stok_item = models.ForeignKey(StokItem, null=True, blank=True, on_delete=models.SET_NULL)
@@ -81,6 +95,11 @@ class OrderItem(models.Model):
     
     def __str__(self):
         return f"order_id: {self.order.id} | Product: {self.stok_item.product}, {self.stok_item.size}, {self.stok_item.color.name}"
+    
+    @property
+    def total_price(self):
+        return self.quantity * self.stok_item.product.price
+        
     
 
 class Banner(models.Model):

@@ -4,7 +4,9 @@
 {% block body %}
     <h1>Cart</h1>
 
-    <h4>Order Number: {{ order.id }}</h4>
+    <p>Order's Number: {{ order.id }}</p>
+    <p>Order's Total: {{ order.total_price }}</p>
+    <p>Total Products: {{ order.total_quantity }}</p>
 
     {% for item in order_items %}
         <p>
@@ -13,6 +15,8 @@
             Color {{ item.stok_item.color.name }}; 
             Size: {{ item.stok_item.size }}; 
             Quantity: {{ item.quantity }};
+            unit price: $ {{ item.stok_item.product.price }};
+            Total: $ {{ item.total_price }}
         </p>
     {% endfor %}
 
