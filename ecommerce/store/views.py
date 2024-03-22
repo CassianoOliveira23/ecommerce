@@ -25,7 +25,7 @@ def see_product(request, id_product, id_color=None):
     if id_color:
         selected_color = Color.objects.get(id=id_color)
     product = Product.objects.get(id=id_product)
-    stok_item = StokItem.objects.filter(product=product, quantity__gt=0)# gt: Greater than
+    stok_item = StokItem.objects.filter(product=product, quantity__gt=0)
     if len(stok_item) > 0:
         there_is_stok = True
         colors = {item.color for item in stok_item}
@@ -54,12 +54,28 @@ def addto_cart(request, id_product):
         size = data.get("size")
         if not size:
             return redirect('store')
+        
+        # taking customer
+        if request.user.is_authenticated:
+            customer = request.user.customer
+        else:
+            return redirect('store')
+        
+        order, created = Order.objects.get_or_create(customer=customer, done=False)
+        stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)
+        order_items, created = OrderItem.objects.get_or_create(stok_item=stok_item, order=order)
+        order_items.quantity += 1
+        order_items.save()
         return redirect('cart')
     else:
         return redirect('store')
     
-    # take customer
+    
     #create the order
+    
+def remove_cart(request):
+    return redirect('cart')
+    
         
 
 

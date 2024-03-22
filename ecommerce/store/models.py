@@ -52,7 +52,6 @@ class StokItem(models.Model):
         return f"{self.product.name} | Size: {self.size} | Color: {self.color}"
 
 
-
 class Address(models.Model):
     street = models.CharField(max_length=400, null=True, blank=True)
     number = models.IntegerField(default=0)
@@ -72,7 +71,6 @@ class Order(models.Model):
     
     def __str__(self):
         return f"Customer: {self.customer.email} | id_order: {self.id} | Done: {self.done}"
-    
     
     @property
     def total_price(self):
