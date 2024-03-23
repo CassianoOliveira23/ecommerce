@@ -14,10 +14,27 @@
             Product: {{ item.stok_item.product.name }}; 
             Color {{ item.stok_item.color.name }}; 
             Size: {{ item.stok_item.size }}; 
-            Quantity: {{ item.quantity }};
+            <div style="display: flex;">
+                Quantity: 
+                <form method="POST" action="{% url 'remove_cart' item.stok_item.product %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="size" value="{{ item.stok_item.size }}">
+                    <input type="hidden" name="color" value="{{ item.stok_item.color.id }}">
+                    <button type="submit">-</button>
+                </form>;
+                {{ item.quantity }}
+                <form method="POST" action="{% url 'addto_cart' item.stok_item.product %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="size" value="{{ item.stok_item.size }}">
+                    <input type="hidden" name="color" value="{{ item.stok_item.color.id }}">
+                    <button type="submit">+</button>
+                </form>;
+            </div>
+
             unit price: $ {{ item.stok_item.product.price }};
             Total: $ {{ item.total_price }}
         </p>
+        <hr>
     {% endfor %}
 
     <a href="{% url 'checkout' %}">Checkout</a>

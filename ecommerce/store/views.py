@@ -49,10 +49,16 @@ def cart(request):
 def addto_cart(request, id_product):
     if request.method == 'POST' and id_product:
         data = request.POST.dict()
-        print(data)
-        id_color = data.get("color")
         size = data.get("size")
-        if not size:
+        id_color = data.get("color")
+        
+        if not size or not id_color:
+            return redirect('store')
+        
+        #convert id into a integer:
+        try:
+            id_color = int(id_color)
+        except ValueError:
             return redirect('store')
         
         # taking customer
@@ -62,7 +68,12 @@ def addto_cart(request, id_product):
             return redirect('store')
         
         order, created = Order.objects.get_or_create(customer=customer, done=False)
-        stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)
+        try:
+            stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)
+        except StokItem.DoesNotExist:
+            return redirect('store')
+            
+        
         order_items, created = OrderItem.objects.get_or_create(stok_item=stok_item, order=order)
         order_items.quantity += 1
         order_items.save()
