@@ -29,7 +29,7 @@
                     <label for="{{ size }}">{{ size }}</label>
                 {% endfor %}
 
-                <input type="hidden" name="color" value="{{ selected_color }}">
+                <input type="hidden" name="color" value="{{ selected_color.id }}">
                 <button type="submit">Add to Cart</button>
             </form>
         {% endif %}

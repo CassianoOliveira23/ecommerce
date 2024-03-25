@@ -55,12 +55,6 @@ def addto_cart(request, id_product):
         if not size or not id_color:
             return redirect('store')
         
-        #convert id into a integer:
-        try:
-            id_color = int(id_color)
-        except ValueError:
-            return redirect('store')
-        
         # taking customer
         if request.user.is_authenticated:
             customer = request.user.customer
@@ -68,12 +62,7 @@ def addto_cart(request, id_product):
             return redirect('store')
         
         order, created = Order.objects.get_or_create(customer=customer, done=False)
-        try:
-            stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)
-        except StokItem.DoesNotExist:
-            return redirect('store')
-            
-        
+        stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)        
         order_items, created = OrderItem.objects.get_or_create(stok_item=stok_item, order=order)
         order_items.quantity += 1
         order_items.save()
