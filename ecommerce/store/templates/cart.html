@@ -16,14 +16,14 @@
             Size: {{ item.stok_item.size }}; 
             <div style="display: flex;">
                 Quantity: 
-                <form method="POST" action="{% url 'remove_cart' item.stok_item.product %}">
+                <form method="POST" action="{% url 'addto_cart' item.stok_item.product.id %}">
                     {% csrf_token %}
-                    <input type="hidden" name="size" value="{{ item.stok_item.size }}">
+                    <input type="hidden" name="size" value="{{ item.stok_items.size }}">
                     <input type="hidden" name="color" value="{{ item.stok_item.color.id }}">
                     <button type="submit">-</button>
                 </form>;
                 {{ item.quantity }}
-                <form method="POST" action="{% url 'addto_cart' item.stok_item.product %}">
+                <form method="POST" action="{% url 'addto_cart' item.stok_item.product.id %}">
                     {% csrf_token %}
                     <input type="hidden" name="size" value="{{ item.stok_item.size }}">
                     <input type="hidden" name="color" value="{{ item.stok_item.color.id }}">
