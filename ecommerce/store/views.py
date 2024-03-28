@@ -71,11 +71,32 @@ def addto_cart(request, id_product):
         return redirect('store')
     
     
-    #create the order
     
-def remove_cart(request):
-    return redirect('cart')
-    
+def remove_cart(request, id_product):
+    if request.method == 'POST' and id_product:
+        data = request.POST.dict()
+        size = data.get("size")
+        id_color = data.get("color")
+        
+        if not size or not id_color:
+            return redirect('store')
+        
+        if request.user.is_authenticated:
+            customer = request.user.customer
+        else:
+            return redirect('store')
+        
+        order, created = Order.objects.get_or_create(customer=customer, done=False)
+        stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)        
+        order_items, created = OrderItem.objects.get_or_create(stok_item=stok_item, order=order)
+        order_items.quantity -= 1
+        order_items.save()
+        
+        if order_items.quantity <= 0:
+            order_items.delete()
+        return redirect('cart')
+    else:
+        return redirect('store')
         
 
 
