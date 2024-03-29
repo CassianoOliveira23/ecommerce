@@ -41,10 +41,19 @@ def see_product(request, id_product, id_color=None):
 def cart(request):
     if request.user.is_authenticated:
         customer = request.user.customer
+    else:
+        if  request.COOKIES.get("id_section"):
+            id_section =  request.COOKIES.get("id_section")
+            customer, created = Customer.objects.get_or_create(id_section=id_section)
+        else:
+            context = {"existent_customer": False, "order_items": None, "order": None}
+            return render(request, 'cart.html', context)
+            
     order, created = Order.objects.get_or_create(customer=customer, done=False)
     order_items = OrderItem.objects.filter(order=order)
-    context = {"order_items": order_items, "order": order }
+    context = {"order_items": order_items, "order": order, "existent_customer": True}
     return render(request, 'cart.html', context)
+
 
 
 def addto_cart(request, id_product):
@@ -65,10 +74,9 @@ def addto_cart(request, id_product):
                 id_section = request.COOKIES.get("id_section")
             else:
                 id_section = str((uuid.uuid4))
-                response.set_cookie(key=id_section, value=id_section)
+                response.set_cookie(key="id_section", value=id_section, max_age=60*60*24*30)
             customer, created = Customer.objects.get_or_create(id_section=id_section)   
-          
-        
+    
         order, created = Order.objects.get_or_create(customer=customer, done=False)
         stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)        
         order_items, created = OrderItem.objects.get_or_create(stok_item=stok_item, order=order)
@@ -93,7 +101,11 @@ def remove_cart(request, id_product):
         if request.user.is_authenticated:
             customer = request.user.customer
         else:
-            return redirect('store')
+            if  request.COOKIES.get("id_section"):
+                id_section =  request.COOKIES.get("id_section")
+                customer, created = Customer.objects.get_or_create(id_section=id_section)
+            else:
+                return redirect('store')
         
         order, created = Order.objects.get_or_create(customer=customer, done=False)
         stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)        

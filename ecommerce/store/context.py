@@ -1,11 +1,15 @@
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Customer
 
 def cart(request):
     items_cart = 0
     if request.user.is_authenticated:
         customer = request.user.customer
     else:
-        return{"items_cart": items_cart }
+        if  request.COOKIES.get("id_section"):
+            id_section =  request.COOKIES.get("id_section")
+            customer, created = Customer.objects.get_or_create(id_section=id_section)
+        else:    
+            return{"items_cart": items_cart }
     
     order, created = Order.objects.get_or_create(customer=customer, done=False)
     order_items = OrderItem.objects.filter(order=order)
