@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *
+import uuid
 
 
 def homepage(request):
@@ -56,17 +57,25 @@ def addto_cart(request, id_product):
             return redirect('store')
         
         # taking customer
+        response = redirect('cart')
         if request.user.is_authenticated:
             customer = request.user.customer
         else:
-            return redirect('store')
+            if request.COOKIES.get("id_section"):
+                id_section = request.COOKIES.get("id_section")
+            else:
+                id_section = str((uuid.uuid4))
+                response.set_cookie(key=id_section, value=id_section)
+            customer, created = Customer.objects.get_or_create(id_section=id_section)   
+          
         
         order, created = Order.objects.get_or_create(customer=customer, done=False)
         stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)        
         order_items, created = OrderItem.objects.get_or_create(stok_item=stok_item, order=order)
         order_items.quantity += 1
         order_items.save()
-        return redirect('cart')
+        return response
+
     else:
         return redirect('store')
     
