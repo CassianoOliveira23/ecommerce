@@ -60,6 +60,9 @@ class Address(models.Model):
     city = models.CharField(max_length=400, null=True, blank=True)
     state = models.CharField(max_length=400, null=True, blank=True)
     customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)
+    
+    def __str__(self) -> str:
+        return f"{self.customer.email} - {self.street} - {self.city} - - {self.cep} - - {self.state}"
 
     
 class Order(models.Model):

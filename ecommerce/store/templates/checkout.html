@@ -3,4 +3,37 @@
 
 {% block body %}
     <h1>Checkout</h1>
+
+    <a href="{% url 'cart' %}">Back to the Cart</a>
+
+    <p>Order's Number: {{ order.id }}</p>
+    <p>Order's Total: {{ order.total_price }}</p>
+    <p>Total Products: {{ order.total_quantity }}</p>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <h4>Select delivery address:</h4>
+        <a href="{% url 'add_address' %}">Add delivery address</a>
+        <br>
+        {% for address in addresses  %}
+            <input type="radio" name="address" value="{{ address.id }}">
+            <label for="{{ address.id }}">{{ address.city }}-{{ address.state }}, {{ address.street }}, {{ address.number }}, {{ address.complement }} - {{ address.cep }}</label>
+            <br>
+        {% endfor %}
+        
+
+        {% if not request.user.is_authenticated %}
+            <hr>
+            <h4>Fill in your email to complete the order.</h4>
+            <input type="email" name="email" placeholder="e-mail">
+        {% endif %}
+
+        <hr>
+
+        <input type="hidden" value="{{ order.total_price }}" name="total">
+        <button type="submit">Complete the order  - US$ {{ order.total_price }}</button>
+    </form>
+    
+
 {% endblock %}
+
