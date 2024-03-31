@@ -130,7 +130,6 @@ def checkout(request):
             customer, created = Customer.objects.get_or_create(id_section=id_section)
         else:
             return redirect('store')
-            
     order, created = Order.objects.get_or_create(customer=customer, done=False)
     addresses = Address.objects.filter(customer=customer)
     context = {"order": order, "addresses": addresses}
@@ -138,8 +137,25 @@ def checkout(request):
 
 
 def add_address(request):
-    context = {}
-    return render(request, 'add_address.html', context)
+    if request.method == "POST":
+        #Send form
+        if request.user.is_authenticated:
+            customer = request.user.customer
+        else:
+            if  request.COOKIES.get("id_section"):
+                id_section =  request.COOKIES.get("id_section")
+                customer, created = Customer.objects.get_or_create(id_section=id_section)
+            else:
+                return redirect('store')
+        data = request.POST.dict()
+        address = Address.objects.create(customer=customer, street=data.get("street"),
+                                         number=int(data.get("number")), state=data.get("state"),
+                                         city=data.get("city"), cep=data.get("cep"), complement=data.get("complement"))
+        address.save()
+        return redirect("checkout")
+    else:
+        context = {}
+        return render(request, 'add_address.html', context)
 
 
 

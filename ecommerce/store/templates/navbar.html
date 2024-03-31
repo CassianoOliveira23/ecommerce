@@ -8,4 +8,17 @@
     <a href="{% url 'cart' %}">cart</a>
     <img src="{% static 'images/carrinho.png' %}" width="35px;"> 
     {{ items_cart }}
+
+
+    <div style="display: flex"> 
+        {% for category in categories %}
+            <div>
+                <a href={% url 'store' %} {{ category.name }}>{{ category.name }}:</a>
+                <br>
+                {% for type in types %}
+                    <a  href={% url 'store' %}{{ category.name }}-{{ type.name }}>{{ type.name }}</a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
 </nav>

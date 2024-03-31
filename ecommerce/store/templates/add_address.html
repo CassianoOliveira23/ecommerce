@@ -3,5 +3,19 @@
 
 {% block body %}
     <h1>Add Address</h1>
+    <a href="{% url 'checkout' %}">Return to checkout</a>
+
+    <h3>Add a new delivery address<h3>
+    <form method="POST" action="{% url 'add_address' %}">
+        {% csrf_token %}
+        <input type="text" name="city" placeholder="City">
+        <input type="text" name="state" placeholder="State">
+        <input type="text" name="street" placeholder="Street">
+        <input type="number" name="number" placeholder="Number">
+        <input type="text" name="complement" placeholder="Complement">
+        <input type="number" name="cep" placeholder="cep">
+
+        <button type="submit">Add Address</button>
+    </form>
 {% endblock %}
 

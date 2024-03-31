@@ -1,4 +1,4 @@
-from .models import Order, OrderItem, Customer
+from .models import Order, OrderItem, Customer, ProductCategory, ProductType
 
 def cart(request):
     items_cart = 0
@@ -17,6 +17,12 @@ def cart(request):
         items_cart += item.quantity
    
     return{"items_cart": items_cart }
+
+
+def category_types(request):
+    categories = ProductCategory.objects.all()
+    types = ProductType.objects.all()
+    return {"categories": categories, "types": types}
 
 
 # TODO When a customer create an account in our website we have to create a customer for him
