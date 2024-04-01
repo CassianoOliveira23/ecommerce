@@ -13,10 +13,10 @@
     <div style="display: flex"> 
         {% for category in categories %}
             <div>
-                <a href={% url 'store' %} {{ category.name }}>{{ category.name }}:</a>
+                <a href={% url 'store' %} {{ category.slug }}>{{ category.name }}:</a>
                 <br>
                 {% for type in types %}
-                    <a  href={% url 'store' %}{{ category.name }}-{{ type.name }}>{{ type.name }}</a>
+                    <a  href={% url 'store' %}{{ category.slug }}-{{ type.slug }}>{{ type.name }}</a>
                 {% endfor %}
             </div>
         {% endfor %}

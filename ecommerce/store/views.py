@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *
+from .utils import filter_products, price_min_max
 import uuid
 
 
@@ -9,11 +10,12 @@ def homepage(request):
     return render(request, 'homepage.html', context)
 
 
-def store(request, category_name=None):
+def store(request, filter=None):
     products = Product.objects.filter(active=True)
-    if category_name:
-        products = products.filter(category__name=category_name)
-    context = {"products": products}
+    products = filter_products(products, filter)
+    sizes = ["P", "M", "G"]
+    min, max = price_min_max(products)
+    context = {"products": products, "min": min, "max": max, "sizes": sizes}
     return render(request, 'store.html', context)
 
 
@@ -33,7 +35,6 @@ def see_product(request, id_product, id_color=None):
         if id_color:
             stok_item = StokItem.objects.filter(product=product, quantity__gt=0, color__id=id_color)
             sizes = { item.size for item in stok_item }
-   
     context = {"product": product, "there_is_stok": there_is_stok, "colors": colors, "sizes": sizes, "selected_color": selected_color}
     return render(request,'see_product.html', context)
 
@@ -47,8 +48,7 @@ def cart(request):
             customer, created = Customer.objects.get_or_create(id_section=id_section)
         else:
             context = {"existent_customer": False, "order_items": None, "order": None}
-            return render(request, 'cart.html', context)
-            
+            return render(request, 'cart.html', context)    
     order, created = Order.objects.get_or_create(customer=customer, done=False)
     order_items = OrderItem.objects.filter(order=order)
     context = {"order_items": order_items, "order": order, "existent_customer": True}
@@ -76,7 +76,6 @@ def addto_cart(request, id_product):
                 id_section = str((uuid.uuid4))
                 response.set_cookie(key="id_section", value=id_section, max_age=60*60*24*30)
             customer, created = Customer.objects.get_or_create(id_section=id_section)   
-    
         order, created = Order.objects.get_or_create(customer=customer, done=False)
         stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)        
         order_items, created = OrderItem.objects.get_or_create(stok_item=stok_item, order=order)
@@ -106,7 +105,6 @@ def remove_cart(request, id_product):
                 customer, created = Customer.objects.get_or_create(id_section=id_section)
             else:
                 return redirect('store')
-        
         order, created = Order.objects.get_or_create(customer=customer, done=False)
         stok_item = StokItem.objects.get(product__id=id_product, size=size, color__id=id_color)        
         order_items, created = OrderItem.objects.get_or_create(stok_item=stok_item, order=order)

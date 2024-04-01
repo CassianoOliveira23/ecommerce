@@ -14,12 +14,14 @@ class Customer(models.Model):
 
 class ProductCategory(models.Model):
     name =  models.CharField(max_length=200, null=True, blank=True)
+    slug = models.CharField(max_length=200, null=True, blank=True)
     def __str__(self):
         return str(self.name)
 
 
 class ProductType(models.Model):
-    name =  models.CharField(max_length=200, null=True, blank=True) 
+    name =  models.CharField(max_length=200, null=True, blank=True)
+    slug = models.CharField(max_length=200, null=True, blank=True)
     def __str__(self):
         return str(self.name)
 
