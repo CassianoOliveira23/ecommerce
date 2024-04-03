@@ -13,7 +13,18 @@ def homepage(request):
 def store(request, filter=None):
     products = Product.objects.filter(active=True)
     products = filter_products(products, filter)
-    sizes = ["P", "M", "G"]
+    #apply form items
+    if request.method == "POST":
+        data = request.POST.dict()
+        products = products.filter(price__gte=data.get("min_price"), price__lte=data.get("max_price"))
+        
+        if "size" in data:
+            items = StokItem.objects.filter(product__in=products, size=data.get("size"))
+            ids_products = items.values_list("product", flat=True).distinct()
+            products = Product.objects.filter(id__in=ids_products)
+        
+    items = StokItem.objects.filter(quantity__gt=0, product__in=products)
+    sizes = items.values_list("size", flat=True).distinct()
     min, max = price_min_max(products)
     context = {"products": products, "min": min, "max": max, "sizes": sizes}
     return render(request, 'store.html', context)
@@ -117,7 +128,6 @@ def remove_cart(request, id_product):
     else:
         return redirect('store')
         
-
 
 def checkout(request):
     if request.user.is_authenticated:
