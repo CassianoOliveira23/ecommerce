@@ -20,9 +20,9 @@ def cart(request):
 
 
 def category_types(request):
-    categories = ProductCategory.objects.all()
-    types = ProductType.objects.all()
-    return {"categories": categories, "types": types}
+    categories_navbar = ProductCategory.objects.all()
+    types_navbar = ProductType.objects.all()
+    return {"categories_navbar": categories_navbar, "types_navbar": types_navbar}
 
 
 # TODO When a customer create an account in our website we have to create a customer for him

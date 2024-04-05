@@ -11,11 +11,11 @@
 
 
     <div style="display: flex"> 
-        {% for category in categories %}
+        {% for category in categories_navbar %}
             <div>
                 <a href={% url 'store' %} {{ category.slug }}>{{ category.name }}:</a>
                 <br>
-                {% for type in types %}
+                {% for type in types_navbar %}
                     <a  href={% url 'store' %}{{ category.slug }}-{{ type.slug }}>{{ type.name }}</a>
                 {% endfor %}
             </div>

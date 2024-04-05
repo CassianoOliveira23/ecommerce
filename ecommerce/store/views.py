@@ -22,11 +22,17 @@ def store(request, filter=None):
             items = StokItem.objects.filter(product__in=products, size=data.get("size"))
             ids_products = items.values_list("product", flat=True).distinct()
             products = Product.objects.filter(id__in=ids_products)
+        if "type" in data:
+            products = products.filter(type__slug=data.get("type"))
+        if "category" in data:
+            products = products.filter(category__slug=data.get("category"))
         
     items = StokItem.objects.filter(quantity__gt=0, product__in=products)
     sizes = items.values_list("size", flat=True).distinct()
+    ids_categories = products.values_list("category", flat=True).distinct()
+    categories = ProductCategory.objects.filter(id__in= ids_categories)
     min, max = price_min_max(products)
-    context = {"products": products, "min": min, "max": max, "sizes": sizes}
+    context = {"products": products, "min": min, "max": max, "sizes": sizes, "categories": categories}
     return render(request, 'store.html', context)
 
 
