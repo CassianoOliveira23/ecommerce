@@ -27,6 +27,9 @@ def order_products(products, order):
     elif order == "max-price":
         products = products.order_by("-price")
     elif order == "best-sellers":
-        products = products
-    
+        product_list = []
+        for product in products:
+            product_list.append((product.total_sales(), product))
+            product_list = sorted(product_list, reverse=True)
+            products = [items[1] for items in product_list]
     return products

@@ -33,10 +33,14 @@ class Product(models.Model):
     active = models.BooleanField(default=True)
     category = models.ForeignKey(ProductCategory, null=True, blank=True, on_delete=models.SET_NULL)
     type = models.ForeignKey(ProductType, null=True, blank=True, on_delete=models.SET_NULL)
+    
     def __str__(self):
         return f"Product: {self.name} | Category: {self.category} | Type: {self.type} | Price: {self.price}"
-
-
+    
+    def total_sales(self):
+        items = OrderItem.objects.filter(order__done=True, stok_item__product=self.id)
+        total = sum([items.quantity for items in items])
+        return total
 
 class Color(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
