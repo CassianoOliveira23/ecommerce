@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *
-from .utils import filter_products, price_min_max
+from .utils import filter_products, price_min_max, order_products
 import uuid
 
 
@@ -32,6 +32,10 @@ def store(request, filter=None):
     ids_categories = products.values_list("category", flat=True).distinct()
     categories = ProductCategory.objects.filter(id__in= ids_categories)
     min, max = price_min_max(products)
+    
+    order = request.GET.get("order", "min-price")
+    products = order_products(products, order)
+    
     context = {"products": products, "min": min, "max": max, "sizes": sizes, "categories": categories}
     return render(request, 'store.html', context)
 

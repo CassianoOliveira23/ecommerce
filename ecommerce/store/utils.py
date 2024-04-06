@@ -21,3 +21,12 @@ def price_min_max(products):
         min = round(min, 2)
     return min, max
     
+def order_products(products, order):
+    if order == "min-price":
+        products = products.order_by("price")
+    elif order == "max-price":
+        products = products.order_by("-price")
+    elif order == "best-sellers":
+        products = products
+    
+    return products
