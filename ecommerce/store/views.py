@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import *
 from .utils import filter_products, price_min_max, order_products
+from django.contrib.auth import login, logout, authenticate
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 import uuid
 
 
@@ -13,7 +16,6 @@ def homepage(request):
 def store(request, filter=None):
     products = Product.objects.filter(active=True)
     products = filter_products(products, filter)
-    #apply form items
     if request.method == "POST":
         data = request.POST.dict()
         products = products.filter(price__gte=data.get("min_price"), price__lte=data.get("max_price"))
@@ -182,5 +184,75 @@ def account(request):
     return render(request, 'user/account.html')
 
 
-def login(request):
-    return render(request, 'user/login.html')
+def to_sign_in(request):
+    error = False
+    if request.user.is_authenticated:
+        return redirect('store')
+    if request.method == 'POST':
+        data = request.POST.dict()
+        if "email" in data and "password" in data:
+            email = data.get("email")
+            password = data.get("password")
+            user = authenticate(request, username=email, password=password)
+            
+            #to sign in
+            if user:
+                login(request, user)
+                return redirect('store')
+            else:
+                error = True
+        else:
+            error = True
+    context = {"error": error}
+    return render(request, 'user/login.html', context)
+        
+
+def create_account(request):
+    error = None
+    if request.user.is_authenticated:
+        return redirect('store')
+    if request.method == 'POST':
+        data = request.POST.dict()
+        if "email" in data and "password" in data and "password_comfirm" in data:
+            # Creating Account:
+            email = data.get("email")
+            password = data.get("password")
+            password_comfirm = data.get("password_comfirm")
+            try:
+                validate_email(email)
+            except ValidationError:
+                error = "Invalid E-mail"
+            if password == password_comfirm:
+                user, created = User.objects.get_or_create(username=email, email=email)
+                if not created:
+                    error = "exixtent_user"
+                else:
+                    user.set_password(password)  
+                    user.save() 
+                    
+                    #login user  
+                    user = authenticate(request, username=email, password=password)
+                    login(request, user)
+                    
+                    # if id_section in cookies:
+                    if  request.COOKIES.get("id_section"):
+                        id_section =  request.COOKIES.get("id_section")
+                        customer, created = Customer.objects.get_or_create(id_section=id_section)
+                    else:
+                        #create customer
+                        customer, created = Customer.objects.get_or_create(email=email)
+                    customer.user = user
+                    customer.email = email
+                    customer.save()
+                    return redirect('store')
+                    
+            else:
+                error = "imcompatible_passwords"
+        else:
+            error = "to fill"
+    context = {"error": error}     
+    return render(request, "user/create_account.html", context)
+
+
+# TODO When a customer create an account in our website we have to create a customer for him
+# TODO whan you create an user account the username have to be equal to email 

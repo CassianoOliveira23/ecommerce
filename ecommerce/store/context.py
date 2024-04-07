@@ -25,4 +25,3 @@ def category_types(request):
     return {"categories_navbar": categories_navbar, "types_navbar": types_navbar}
 
 
-# TODO When a customer create an account in our website we have to create a customer for him

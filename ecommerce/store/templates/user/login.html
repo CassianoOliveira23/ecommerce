@@ -2,5 +2,22 @@
 {% load static %}
 
 {% block body %}
-    <h1>Login Page</h1>
+    <h1>Sign in</h1>
+
+    {% if error %}
+        <h4>Invalid credentials, try again or create an account</h4>
+    {% endif %}
+
+    <form method="POST" action="{% url 'to_sign_in' %}"> 
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="E-mail">
+        <br>
+        <input type="password" name="password" placeholder="Password">
+        <br>
+        <button type="submit">Login<button>
+        <br>
+    </form>
+    <a href="{% url 'create_account' %}">Don't have an account? Click here to create one<a>
+    <br>
+    <a href="#">Forgot my password<a>
 {% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+    <h1>Fill out the form to create an account</h1>
+
+    {{ error }}
+
+    <form method="POST" action="{% url 'create_account' %}"> 
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="E-mail">
+        <br>
+        <input type="password" name="password" placeholder="Password">
+        <br>
+        <input type="password" name="password_comfirm" placeholder="Re-enter password">
+        <br>
+        <button type="submit">Create My Account<button>
+    </form>
+
+    <a href="{% url 'to_sign_in' %}">You already have an account? Click here to Login<a>
+{% endblock %}

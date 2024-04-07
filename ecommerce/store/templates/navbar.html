@@ -3,13 +3,6 @@
 <nav>
     <a href="{% url 'homepage' %}"><span>W</span>olpeer</a>
     <a href="{% url 'store' %}">Store</a>
-    <a href="{% url 'login' %}">Login</a>
-    <a href="{% url 'account' %}">My Account</a>
-    <a href="{% url 'cart' %}">cart</a>
-    <img src="{% static 'images/carrinho.png' %}" width="35px;"> 
-    {{ items_cart }}
-
-
     <div style="display: flex"> 
         {% for category in categories_navbar %}
             <div>
@@ -21,4 +14,17 @@
             </div>
         {% endfor %}
     </div>
+
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'account' %}">My Account</a>
+    {% else %}
+        <a href="{% url 'to_sign_in' %}">Login</a>
+    {% endif %}
+    
+    <a href="{% url 'cart' %}">cart</a>
+    <img src="{% static 'images/carrinho.png' %}" width="35px;"> 
+    {{ items_cart }}
+
+
+   
 </nav>
