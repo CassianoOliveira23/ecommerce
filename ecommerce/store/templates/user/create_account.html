@@ -4,7 +4,21 @@
 {% block body %}
     <h1>Fill out the form to create an account</h1>
 
-    {{ error }}
+    {% if error == "to fill" %}
+       <p>Fill out the form fields correctly to create an account</p>
+    {% endif %}
+
+    {% if error == "invalid_email" %}
+       <p>Invalid E-mail</p>
+    {% endif %}
+
+    {% if error == "exixtent_user" %}
+       <p>Already exist an user with this e-mail.<a href="{% url 'to_sign_in' %}">Login</a></p>
+    {% endif %}
+
+    {% if error == "imcompatible_passwords" %}
+       <p>Password and Re-enter password doesn't match</p>
+    {% endif %}
 
     <form method="POST" action="{% url 'create_account' %}"> 
         {% csrf_token %}

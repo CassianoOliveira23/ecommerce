@@ -14,7 +14,7 @@ def homepage(request):
 
 
 def store(request, filter=None):
-    products = Product.objects.filter(active=True)
+    products = Product.objects.filter(active=True)       
     products = filter_products(products, filter)
     if request.method == "POST":
         data = request.POST.dict()
@@ -221,7 +221,7 @@ def create_account(request):
             try:
                 validate_email(email)
             except ValidationError:
-                error = "Invalid E-mail"
+                error = "invalid_email"
             if password == password_comfirm:
                 user, created = User.objects.get_or_create(username=email, email=email)
                 if not created:
@@ -255,4 +255,4 @@ def create_account(request):
 
 
 # TODO When a customer create an account in our website we have to create a customer for him
-# TODO whan you create an user account the username have to be equal to email 
+# TODO when you create an user account the username have to be equal to email 
