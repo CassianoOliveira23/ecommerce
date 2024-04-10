@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from .utils import filter_products, price_min_max, order_products
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import uuid
@@ -180,6 +181,7 @@ def add_address(request):
 
 
 #USER:
+@login_required
 def account(request):
     return render(request, 'user/account.html')
 
@@ -254,5 +256,12 @@ def create_account(request):
     return render(request, "user/create_account.html", context)
 
 
+@login_required
+def to_log_out(request):
+    logout(request)
+    return redirect('to_sign_in')
+    
+    
+    
 # TODO When a customer create an account in our website we have to create a customer for him
 # TODO when you create an user account the username have to be equal to email 
