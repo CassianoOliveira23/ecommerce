@@ -24,7 +24,7 @@
             {% endfor %}
     
             <p>Type</p>
-            {% for type in types %}
+            {% for type in types_navbar %}
                 <input type="radio" name="type" value="{{ type.slug }}">
                 <label for="{{ type.slug }}">{{ type.name }}</label>
             {% endfor %}

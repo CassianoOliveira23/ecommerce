@@ -138,3 +138,5 @@ MEDIA_URL = "images/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'to_sign_in'
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
