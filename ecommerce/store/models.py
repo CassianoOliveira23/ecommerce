@@ -93,6 +93,11 @@ class Order(models.Model):
         quantity = sum( [item.quantity for item in order_items])
         return quantity
     
+    @property
+    def items(self):
+        order_items = OrderItem.objects.filter(order__id=self.id)
+        return order_items
+    
     
 
 class OrderItem(models.Model):

@@ -185,6 +185,14 @@ def add_address(request):
 def account(request):
     return render(request, 'user/account.html')
 
+@login_required
+def my_orders(request):
+    customer = request.user.customer
+    orders = Order.objects.filter(done=True, customer=customer).order_by("-complete_date")
+    context = {"orders": orders}
+    return render(request, 'user/my_orders.html', context)
+    
+
 
 def to_sign_in(request):
     error = False

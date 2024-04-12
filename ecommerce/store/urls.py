@@ -16,6 +16,7 @@ urlpatterns = [
     path('addaddress/', add_address, name="add_address"),
     
     path('account/', account, name="account"),
+    path('myorders/', my_orders, name="my_orders"),
     path('login/', to_sign_in, name="to_sign_in"),
     path('createacount/', create_account, name="create_account"),
     path('logout/', to_log_out, name="to_log_out"),

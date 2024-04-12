@@ -4,5 +4,7 @@
 {% block body %}
     <h1>My Account</h1>
 
+    <a href="{% url 'my_orders' %}">My orders</a>
+
     <a href="{% url 'to_log_out' %}">logout</a>
 {% endblock %}
