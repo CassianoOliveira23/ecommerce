@@ -183,7 +183,51 @@ def add_address(request):
 #USER:
 @login_required
 def account(request):
-    return render(request, 'user/account.html')
+    error = None
+    changed = False
+    if request.method == 'POST':
+        data = request.POST.dict()
+        if 'current_password' in data:
+            #user is changing his password
+            current_password = data.get("current_password")
+            new_password = data.get("new_password")
+            confirm_password = data.get("confirm_password")
+            if new_password == confirm_password:
+                user = authenticate(request, username=request.user.email, password=current_password)
+                if user:
+                    #correct password
+                    user.set_password(new_password)
+                    user.save()
+                    changed = True
+                else:
+                    error = 'incorrect_password'
+            else:
+                error = "imcompatible_passwords"
+        elif 'email' in data:
+            #changing personal information
+            email = data.get("email")
+            fone = data.get("fone")
+            name = data.get("name")
+            if email != request.user.email:
+                users = User.objects.filter(email=email)
+                if len(users) > 0:
+                    error = "existing_email"
+            if not error:
+                customer = request.user.customer
+                customer.email = email
+                request.user.email = email
+                request.user.username = email
+                customer.name = name
+                customer.fone = fone
+                customer.save()
+                request.user.save()
+                changed = True 
+        else:
+            error = "invalid_form"
+    context = {"error": error, "changed": changed}
+    return render(request, 'user/account.html', context)
+
+
 
 @login_required
 def my_orders(request):
@@ -224,7 +268,7 @@ def create_account(request):
     if request.method == 'POST':
         data = request.POST.dict()
         if "email" in data and "password" in data and "password_comfirm" in data:
-            # Creating Account:
+            # Creating  an Account:
             email = data.get("email")
             password = data.get("password")
             password_comfirm = data.get("password_comfirm")
@@ -235,7 +279,7 @@ def create_account(request):
             if password == password_comfirm:
                 user, created = User.objects.get_or_create(username=email, email=email)
                 if not created:
-                    error = "exixtent_user"
+                    error = "existing_user"
                 else:
                     user.set_password(password)  
                     user.save() 
@@ -254,12 +298,11 @@ def create_account(request):
                     customer.user = user
                     customer.email = email
                     customer.save()
-                    return redirect('store')
-                    
+                    return redirect('store')      
             else:
                 error = "imcompatible_passwords"
         else:
-            error = "to fill"
+            error = "to_fill"
     context = {"error": error}     
     return render(request, "user/create_account.html", context)
 

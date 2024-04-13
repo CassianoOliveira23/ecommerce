@@ -4,7 +4,7 @@
 {% block body %}
     <h1>Fill out the form to create an account</h1>
 
-    {% if error == "to fill" %}
+    {% if error == "to_fill" %}
        <p>Fill out the form fields correctly to create an account</p>
     {% endif %}
 
@@ -12,12 +12,12 @@
        <p>Invalid E-mail</p>
     {% endif %}
 
-    {% if error == "exixtent_user" %}
-       <p>Already exist an user with this e-mail.<a href="{% url 'to_sign_in' %}">Login</a></p>
+    {% if error == "existing_user" %}
+       <p>There is already a user with this email.<a href="{% url 'to_sign_in' %}">Login</a></p>
     {% endif %}
 
     {% if error == "imcompatible_passwords" %}
-       <p>Password and Re-enter password doesn't match</p>
+       <p>Password and Re-enter password do not match</p>
     {% endif %}
 
     <form method="POST" action="{% url 'create_account' %}"> 

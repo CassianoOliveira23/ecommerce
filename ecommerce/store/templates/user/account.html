@@ -2,9 +2,58 @@
 {% load static %}
 
 {% block body %}
-    <h1>My Account</h1>
+    <h1>My account</h1>
 
     <a href="{% url 'my_orders' %}">My orders</a>
 
     <a href="{% url 'to_log_out' %}">logout</a>
+
+    {% if changed %}
+        <p>Changes Saved Successfully!</p>
+    {% endif %}
+
+    {% if error == "incorrect_password" %}
+        <p>Incorrect Password</p>
+    {% endif %}
+
+    {% if error == "imcompatible_passwords" %}
+        <p>New Password and Comfirm Password do not match</p>
+    {% endif %}
+
+    {% if error == "existing_email" %}
+        <p>There is already a user with this email.</p>
+    {% endif %}
+
+    {% if error == "invalid_form" %}
+        <p>Invalid form, try again later.</p>
+    {% endif %}
+
+    <h3>My registration details<h3>
+    <form method="POST" action="{% url 'account' %}">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Complete Name"
+        {% if request.user.customer.name %}
+            value="{{ request.user.customer.name }}"
+        {% endif %}>
+        <br>
+        <input type="email" name="email" placeholder="E-mail" value="{{ request.user.email }}">
+        <br>
+        <input type="number" name="fone" placeholder="fone" value="{{ request.user.customer.fone }}">
+        <br>
+        <button type="submit">Update</button>
+    </form>
+    <br>
+    <br>
+    <h3>Change password<h3>
+    <form method="POST" action="{% url 'account' %}">
+        {% csrf_token %}
+        <input type="password" name="current_password" placeholder="Current password">
+        <br>
+        <input type="password" name="new_password" placeholder="New password">
+        <br>
+        <input type="password" name="confirm_password" placeholder="Re-enter password">
+        <br>
+        <button type="submit">Update password</button>
+    </form>
+
 {% endblock %}
