@@ -10,7 +10,7 @@
     <p>Order's Total: {{ order.total_price }}</p>
     <p>Total Products: {{ order.total_quantity }}</p>
 
-    <form method="POST" action="">
+    <form method="POST" action="{% url 'checkout_order' order.id %}">
         {% csrf_token %}
         <h4>Select delivery address:</h4>
         <a href="{% url 'add_address' %}">Add delivery address</a>

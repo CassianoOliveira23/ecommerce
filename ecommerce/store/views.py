@@ -157,6 +157,32 @@ def checkout(request):
     return render(request, 'checkout.html', context)
 
 
+def checkout_order(request, id_order):
+    if request.method == "POST":
+        error = None
+        data = request.POST.dict()
+        total = data.get("total")
+        order = Order.objects.get(id=id_order)
+        if total != order.total_price:
+            error = "price"
+        if not "address" in data:
+            error = "address"
+        else:
+            address = data.get("address")
+            
+        if not request.user.is_authenticated:
+            email = data.get("email")
+            try:
+                validate_email(email)
+            except ValidationError:
+                error = "invalid_email"
+            
+        context = {"error": error}
+        return redirect("checkout")
+    else:
+        return redirect("store")
+    
+
 def add_address(request):
     if request.method == "POST":
         #Send form
