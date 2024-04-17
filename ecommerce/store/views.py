@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from datetime import datetime
 import uuid
 
 
@@ -106,7 +107,6 @@ def addto_cart(request, id_product):
         order_items.quantity += 1
         order_items.save()
         return response
-
     else:
         return redirect('store')
     
@@ -153,7 +153,7 @@ def checkout(request):
             return redirect('store')
     order, created = Order.objects.get_or_create(customer=customer, done=False)
     addresses = Address.objects.filter(customer=customer)
-    context = {"order": order, "addresses": addresses}
+    context = {"order": order, "addresses": addresses, "error":None}
     return render(request, 'checkout.html', context)
 
 
@@ -163,22 +163,42 @@ def checkout_order(request, id_order):
         data = request.POST.dict()
         total = data.get("total")
         order = Order.objects.get(id=id_order)
+        
         if total != order.total_price:
             error = "price"
+
         if not "address" in data:
             error = "address"
         else:
             address = data.get("address")
-            
+            order.address = address
+            order.address = address 
+
         if not request.user.is_authenticated:
             email = data.get("email")
             try:
                 validate_email(email)
             except ValidationError:
-                error = "invalid_email"
-            
-        context = {"error": error}
-        return redirect("checkout")
+                error = "email"
+            if not error:
+                customers = Customer.objects.filter(email=email)
+                if customers:
+                    order.customer = customers[0]
+                else:
+                    order.customer.email = email
+                    order.customer.save()
+                    
+        transaction_code = f"{order.id}-{datetime.now().timestamp()}"
+        order.transaction_code = transaction_code
+        order.save()         
+                
+        if error:
+            addresses = Address.objects.filter(customer=order.customer)
+            context = {"error": error, "order": order, "addresses": addresses}
+            return render(request, 'checkout.html', context)
+        else:
+            #TODO payment
+            return redirect("checkout", error)
     else:
         return redirect("store")
     

@@ -10,6 +10,20 @@
     <p>Order's Total: {{ order.total_price }}</p>
     <p>Total Products: {{ order.total_quantity }}</p>
 
+    {% if error %}
+        {% if error == "price" %}
+            <p>The price of the products is incorrect. Try again or go back to the cart.</p>
+        {% endif %}
+
+        {% if error == "address" %}
+            <p>Select the delivery address to continue</p>
+        {% endif %}
+
+        {% if error == "email" %}
+            <p>Please fill in the email field to confirm your purchase</p>
+        {% endif %}
+    {% endif %}
+
     <form method="POST" action="{% url 'checkout_order' order.id %}">
         {% csrf_token %}
         <h4>Select delivery address:</h4>
