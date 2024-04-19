@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from datetime import datetime
+from .api_mercadopago import create_payment
 import uuid
 
 
@@ -162,17 +163,19 @@ def checkout_order(request, id_order):
         error = None
         data = request.POST.dict()
         total = data.get("total")
+        total = float(total)
         order = Order.objects.get(id=id_order)
         
-        if total != order.total_price:
+        if total != float(order.total_price):
             error = "price"
 
         if not "address" in data:
             error = "address"
         else:
-            address = data.get("address")
+            id_address = data.get("address")
+            address = Address.objects.get(id=id_address)
             order.address = address
-            order.address = address 
+           
 
         if not request.user.is_authenticated:
             email = data.get("email")
@@ -197,7 +200,9 @@ def checkout_order(request, id_order):
             context = {"error": error, "order": order, "addresses": addresses}
             return render(request, 'checkout.html', context)
         else:
-            #TODO payment
+            order_items = OrderItem.objects.filter(order=order)
+            link = ""
+            create_payment(order_items)
             return redirect("checkout", error)
     else:
         return redirect("store")
