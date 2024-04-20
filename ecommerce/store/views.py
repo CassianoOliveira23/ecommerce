@@ -201,9 +201,11 @@ def checkout_order(request, id_order):
             return render(request, 'checkout.html', context)
         else:
             order_items = OrderItem.objects.filter(order=order)
-            link = ""
-            create_payment(order_items)
-            return redirect("checkout", error)
+            link = "https://webhook.site/22454206-8f7e-4d0e-8c0e-874e17d1a8f9"
+            link_payment, id_payment = create_payment(order_items, link)
+            payment = Payment.objects.create(id_payment=id_payment, order=order)
+            payment.save()
+            return redirect(link_payment)
     else:
         return redirect("store")
     
