@@ -24,7 +24,7 @@
         {% endif %}
     {% endif %}
 
-    <form method="POST" action="{% url 'checkout_order' order.id %}">
+    <form method="POST" action="{% url 'complete_order' order.id %}">
         {% csrf_token %}
         <h4>Select delivery address:</h4>
         <a href="{% url 'add_address' %}">Add delivery address</a>

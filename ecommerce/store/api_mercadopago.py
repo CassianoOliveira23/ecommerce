@@ -10,7 +10,7 @@ def create_payment(order_items, link):
 
     items = []
     for item in order_items:
-        quantity = int(item.quantity)
+        quantity = int(item.quantity) 
         product_name = item.stok_item.product.name
         unit_price = float(item.stok_item.product.price)
         items.append({

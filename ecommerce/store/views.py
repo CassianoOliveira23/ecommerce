@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from .models import *
 from .utils import filter_products, price_min_max, order_products
 from django.contrib.auth import login, logout, authenticate
@@ -154,11 +155,11 @@ def checkout(request):
             return redirect('store')
     order, created = Order.objects.get_or_create(customer=customer, done=False)
     addresses = Address.objects.filter(customer=customer)
-    context = {"order": order, "addresses": addresses, "error":None}
+    context = {"order": order, "addresses": addresses, "error": None}
     return render(request, 'checkout.html', context)
 
 
-def checkout_order(request, id_order):
+def complete_order(request, id_order):
     if request.method == "POST":
         error = None
         data = request.POST.dict()
@@ -175,7 +176,6 @@ def checkout_order(request, id_order):
             id_address = data.get("address")
             address = Address.objects.get(id=id_address)
             order.address = address
-           
 
         if not request.user.is_authenticated:
             email = data.get("email")
@@ -189,8 +189,7 @@ def checkout_order(request, id_order):
                     order.customer = customers[0]
                 else:
                     order.customer.email = email
-                    order.customer.save()
-                    
+                    order.customer.save()      
         transaction_code = f"{order.id}-{datetime.now().timestamp()}"
         order.transaction_code = transaction_code
         order.save()         
@@ -201,13 +200,19 @@ def checkout_order(request, id_order):
             return render(request, 'checkout.html', context)
         else:
             order_items = OrderItem.objects.filter(order=order)
-            link = "https://webhook.site/22454206-8f7e-4d0e-8c0e-874e17d1a8f9"
+            link = request.build_absolute_uri(reverse('complete_payment'))
             link_payment, id_payment = create_payment(order_items, link)
             payment = Payment.objects.create(id_payment=id_payment, order=order)
             payment.save()
-            return redirect(link_payment)
+            return redirect(link_payment)   
     else:
         return redirect("store")
+    
+    
+def complete_payment(request):
+    print(request.GET.dict())
+    #{'collection_id': ['1322739263'], 'collection_status': ['approved'], 'payment_id': ['1322739263'], 'status': ['approved'], 'external_reference': ['null'], 'payment_type': ['credit_card'], 'merchant_order_id': ['17949268060'], 'preference_id': ['150619048-4d3ba720-dd67-4fc4-817c-94db76283620'], 'site_id': ['MLB'], 'processing_mode': ['aggregator'], 'merchant_account_id': ['null']}
+    return redirect("store")
     
 
 def add_address(request):
