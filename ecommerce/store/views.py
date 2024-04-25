@@ -210,9 +210,30 @@ def complete_order(request, id_order):
     
     
 def complete_payment(request):
-    print(request.GET.dict())
-    #{'collection_id': ['1322739263'], 'collection_status': ['approved'], 'payment_id': ['1322739263'], 'status': ['approved'], 'external_reference': ['null'], 'payment_type': ['credit_card'], 'merchant_order_id': ['17949268060'], 'preference_id': ['150619048-4d3ba720-dd67-4fc4-817c-94db76283620'], 'site_id': ['MLB'], 'processing_mode': ['aggregator'], 'merchant_account_id': ['null']}
-    return redirect("store")
+    data = request.GET.dict()
+    status = data.get("status")
+    id_payment = data.get("preference_id")
+    if status == "approved":
+        payment = Payment.objects.get(id_payment=id_payment)
+        payment.aprove = True
+        order = payment.order
+        order.done = True
+        order.complete_date = datetime.now()
+        order.save()
+        payment.save()
+        if request.user.is_authenticated:
+            return redirect("my_orders") 
+        else:
+            return redirect("approved_order", order.id) 
+    else:
+        return redirect("checkout")           
+
+
+def approved_order(request, id_order):
+    order = Order.objects.get(id=id_order)
+    context = {"order": order}
+    return render(request,"approved_order.html", context)
+    
     
 
 def add_address(request):

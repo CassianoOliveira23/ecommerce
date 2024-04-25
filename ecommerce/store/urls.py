@@ -15,7 +15,8 @@ urlpatterns = [
     path('removecart/<int:id_product>/', remove_cart, name="remove_cart"),
     path('addaddress/', add_address, name="add_address"),
     path('completeorder/<int:id_order>/', complete_order, name="complete_order"),
-     path('completepayment/', complete_payment, name="complete_payment"),
+    path('completepayment/', complete_payment, name="complete_payment"),
+    path('approvedorder/<int:id_order>/', approved_order, name="approved_order"),
     
     path('account/', account, name="account"),
     path('myorders/', my_orders, name="my_orders"),

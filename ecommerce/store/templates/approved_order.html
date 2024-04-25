@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+    <h2>Your order was approved</h2>
+
+    <h3>Check your E-mail box to view your order details</h3>
+    <a href="{% url 'store' %}">Back to store</a>
+
+   
+    <div style="display: flex;">
+        <p>Date: {{ order.comlete_date }} </p>
+        <p>ID Order: {{ order.id }} </p>
+        <p>Code Transaction: {{ order.transaction_code }} </p>
+        <p>Total: {{ order.total_price }} </p>
+        <p>Address: {{ order.address.cep }}, {{ order.address.city }}, {{ order.address.state }}, {{ order.address.street }},{{ order.address.number }}</p>
+            
+        {% for item in order.items %}
+            <img src={{ item.stok_item.product.image.url }} width="50px">
+            <p>Product: {{ item.stok_item.product.name }}</p>
+            <p>Amount: {{ item.quantity }}</p>
+            <p>Total: {{ item.total_price }}</p>
+        {% endfor %}
+    </div>
+    <hr>
+   
+{% endblock %}

@@ -22,7 +22,9 @@ def create_payment(order_items, link):
     #items, total
     preference_data = {
         "items": items,
-    
+
+        "auto_return": "all",
+        
         "back_urls": {
             "success": link,
             "pending": link,
