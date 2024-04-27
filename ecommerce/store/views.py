@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
-from .utils import filter_products, price_min_max, order_products
+from .utils import filter_products, price_min_max, order_products, send_email
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
@@ -221,6 +221,9 @@ def complete_payment(request):
         order.complete_date = datetime.now()
         order.save()
         payment.save()
+        
+        send_email(order)
+        
         if request.user.is_authenticated:
             return redirect("my_orders") 
         else:

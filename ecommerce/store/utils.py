@@ -1,4 +1,5 @@
 from django.db.models import Max, Min
+from django.core.mail import send_mail
 
 def filter_products(products, filter):
     if filter:
@@ -30,6 +31,19 @@ def order_products(products, order):
         product_list = []
         for product in products:
             product_list.append((product.total_sales(), product))
-            product_list = sorted(product_list, reverse=True)
+            product_list = sorted(product_list, reverse=True, key=lambda tuple: tuple[0])
             products = [items[1] for items in product_list]
     return products
+
+
+def send_email(order):
+    #sending email:
+    email = order.customer.email
+    subject = f"Order Approved: {order.id}"
+    text = f'''
+    Your order was approved successfully.
+    Id order: {order.id}
+    Total: {order.total_price}
+    Amount of products: {order.total_quantity}'''
+    sender = "backend.cassiano@gmail.com"
+    send_mail(subject, text, sender, [email])
