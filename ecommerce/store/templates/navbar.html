@@ -20,11 +20,13 @@
     {% else %}
         <a href="{% url 'to_sign_in' %}">Login</a>
     {% endif %}
+
+
+    {% if team %}
+        <a href="{% url 'manage_store' %}">Manage Store</a>
+    {% endif %}
     
     <a href="{% url 'cart' %}">cart</a>
     <img src="{% static 'images/carrinho.png' %}" width="35px;"> 
     {{ items_cart }}
-
-
-   
 </nav>

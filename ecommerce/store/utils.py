@@ -37,7 +37,6 @@ def order_products(products, order):
 
 
 def send_email(order):
-    #sending email:
     email = order.customer.email
     subject = f"Order Approved: {order.id}"
     text = f'''

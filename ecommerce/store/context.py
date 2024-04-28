@@ -25,3 +25,12 @@ def category_types(request):
     return {"categories_navbar": categories_navbar, "types_navbar": types_navbar}
 
 
+def in_the_team(request):
+    team = False
+    if request.user.is_authenticated:
+        if request.user.groups.filter(name="team").exists():
+            team = True
+    return {"team": team}
+            
+
+

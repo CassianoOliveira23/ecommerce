@@ -24,6 +24,9 @@ urlpatterns = [
     path('createacount/', create_account, name="create_account"),
     path('logout/', to_log_out, name="to_log_out"),
     
+    path('managestore/', manage_store, name="manage_store" ),
+    path('exportreport/<str:report>/', export_report, name="export_report" ),
+    
     path("password_change/", views.PasswordChangeView.as_view(), name="password_change"),
     path("password_change/done/", views.PasswordChangeDoneView.as_view(), name="password_change_done"),
     

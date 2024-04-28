@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+    <h1>Manage Store</h1>
+
+    <p>Monthly Billing: {{ billing }}</p>
+    <p>Sold Products: {{ amount_products }}</p>
+    <p>Total orders: {{ amount_orders }}</p>
+
+    <hr>
+    <h3>Export Reports</h3>
+
+    <a href="{% url 'export_report' 'order' %}">Export Orders</a>
+
+    <a href="{% url 'export_report' 'customer' %}">Export Customers</a>
+
+    <a href="{% url 'export_report' 'address' %}">Export Address</a>
+    
+
+{% endblock %}

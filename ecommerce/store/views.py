@@ -253,7 +253,7 @@ def add_address(request):
         data = request.POST.dict()
         address = Address.objects.create(customer=customer, street=data.get("street"),
                                          number=int(data.get("number")), state=data.get("state"),
-                                         city=data.get("city"), cep=data.get("cep"), complement=data.get("complement"))
+                                         city=data.get("city"), postal_code=data.get("postal_code"), complement=data.get("complement"))
         address.save()
         return redirect("checkout")
     else:
@@ -393,8 +393,26 @@ def create_account(request):
 def to_log_out(request):
     logout(request)
     return redirect('to_sign_in')
+
+
+@login_required
+def manage_store(request):
+    if request.user.groups.filter(name="team").exists():
+        completed_orders = Order.objects.filter(done=True)
+        amount_orders = len(completed_orders)
+        billing = sum(order.total_price for order in completed_orders)
+        amount_products = sum(order.total_quantity  for order in completed_orders)
+        context = {"amount_orders": amount_orders, "billing": billing, "amount_products": amount_products}
+        return render(request, 'inner/manage_store.html', context=context)
+    else:
+        redirect('store')
     
     
+@login_required  
+def export_report(request, report):
+    print(report)
+    return redirect('manage_store')
     
-# TODO When a customer create an account in our website we have to create a customer for him
-# TODO when you create an user account the username have to be equal to email 
+    
+#  When a customer create an account in our website we have to create a customer for him
+#  when you create an user account the username have to be equal to email 

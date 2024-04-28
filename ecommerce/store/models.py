@@ -62,7 +62,7 @@ class Address(models.Model):
     street = models.CharField(max_length=400, null=True, blank=True)
     number = models.IntegerField(default=0)
     complement = models.CharField(max_length=400, null=True, blank=True)
-    cep = models.IntegerField(default=0)
+    postal_code = models.IntegerField(default=0)
     city = models.CharField(max_length=400, null=True, blank=True)
     state = models.CharField(max_length=400, null=True, blank=True)
     customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)

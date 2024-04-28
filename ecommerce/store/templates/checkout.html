@@ -31,7 +31,7 @@
         <br>
         {% for address in addresses  %}
             <input type="radio" name="address" value="{{ address.id }}">
-            <label for="{{ address.id }}">{{ address.city }}-{{ address.state }}, {{ address.street }}, {{ address.number }}, {{ address.complement }} - {{ address.cep }}</label>
+            <label for="{{ address.id }}">{{ address.city }}-{{ address.state }}, {{ address.street }}, {{ address.number }}, {{ address.complement }} - {{ address.postal_code }}</label>
             <br>
         {% endfor %}
         
