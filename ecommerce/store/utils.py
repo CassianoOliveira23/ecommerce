@@ -1,5 +1,7 @@
 from django.db.models import Max, Min
 from django.core.mail import send_mail
+from django.http import HttpResponse
+import csv
 
 def filter_products(products, filter):
     if filter:
@@ -46,3 +48,23 @@ def send_email(order):
     Amount of products: {order.total_quantity}'''
     sender = "backend.cassiano@gmail.com"
     send_mail(subject, text, sender, [email])
+    
+    
+def export_csv(information):
+    #print(information.model)
+    columns = information.model._meta.fields
+    columns_name = [column.name for column in columns]
+    
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename=export.csv"
+    
+    create_csv = csv.writer(response, delimiter=";")
+    
+    create_csv.writerow(columns_name)
+    
+    for row in information.values_list():
+        create_csv.writerow(row)
+    
+   
+    return response
+    

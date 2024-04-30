@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
-from .utils import filter_products, price_min_max, order_products, send_email
+from .utils import filter_products, price_min_max, order_products, send_email, export_csv
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
@@ -410,8 +410,16 @@ def manage_store(request):
     
 @login_required  
 def export_report(request, report):
-    print(report)
-    return redirect('manage_store')
+    if request.user.groups.filter(name="team").exists():
+        if report == "order":
+            information = Order.objects.filter(done=True)
+        elif report == "customer":
+            information = Customer.objects.all()
+        elif report == "address":
+            information = Address.objects.all()
+        return export_csv(information)
+    else:
+        return redirect('manage_store')
     
     
 #  When a customer create an account in our website we have to create a customer for him
