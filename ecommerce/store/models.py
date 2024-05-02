@@ -68,7 +68,7 @@ class Address(models.Model):
     customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)
     
     def __str__(self) -> str:
-        return f"{self.customer.email} - {self.street} - {self.city} - - {self.cep} - - {self.state}"
+        return f"{self.customer.email} - {self.street} - {self.city} - - {self.postal_code} - - {self.state}"
 
     
 class Order(models.Model):

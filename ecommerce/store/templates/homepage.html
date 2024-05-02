@@ -2,11 +2,65 @@
 {% load static %}
 
 {% block body %}
-    <h1>Home Page</h1>
-
-    {% for banner in banners %}
-        <a href="{% url 'store' %}{{ banner.link }}">
-            <img src="{{ banner.image.url }}">
-        </a>
-    {% endfor %}
+    <main class="principal">
+        <!--<section class="carrossel">
+          <div class="carrossel__botoes">
+            <div class="carrossel__botao">
+              <div class="carrossel__preenchimento"></div>
+            </div>
+            <div class="carrossel__botao">
+              <div class="carrossel__preenchimento"></div>
+            </div>
+          </div>
+  
+          <div class="carrossel__imagens">
+            <div class="carrossel__item">
+              <a href="https://www.usereserva.com/faca-vc">
+                <img
+                  src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/081bf7e6-606a-4631-a726-f6bc0412dbfb___3221b0bbc02ef8712c86e7a3e1a00d8d.jpg"
+                  alt="Imagem 1 Desktop"
+                />
+                <img
+                  src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/63f0c2c3-c1ab-4406-88f1-5565c2d23e9e___a4ffcc92bda5a2b1d7ad07117e698745.jpg"
+                  alt="Imagem 1 Mobile"
+                />
+              </a>
+            </div>
+            <div class="carrossel__item">
+              <a href="https://www.usereserva.com/faca-vc">
+                <img
+                  src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/6b0e9f52-670b-4542-ba5d-533fbb5d31d6___1c0cdc941121cd33eca5309aa9059bc0.jpg"
+                  alt="Imagem 2 Desktop"
+                /><img
+                  src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/a7294ce0-496e-4b2b-b87a-d1cd73eb0eb2___6563aa4bdc15c2c7354efe77ccc86d5f.jpg"
+                  alt="Imagem 2 Mobile"
+                />
+              </a>
+            </div>
+          </div>
+        </section>-->
+  
+        <section class="banner-grid">
+            {% for banner in banners %}
+                <a
+                    href="{% url 'store' %} {{ banner.link }}"
+                    class="banner-grid__imagem">
+                    <img src="{{ banner.image.url }}" alt="{{ banner.link }}"/>
+                </a>
+            {% endfor %}
+        </section>
+  
+        <!--<section class="banner-individual">
+          <a href="https://www.usereserva.com/colecao-reserva/ofertas">
+            <img
+              src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/8ffc21ee-1cfa-40ff-a2b4-7e638fd72508___d5ce3e600b2d3cb357f58da7aff1bf6c.gif"
+              alt="Banner Gif Desktop"
+            />
+            <img
+              src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/93111586-21ea-48ed-916d-96a89d35544b___dcc4b02dc625c00b8d642a9a3e2dc2b4.gif"
+              alt="Banner Gif Mobile"
+            />
+          </a>
+        </section>-->
+    </main>
 {% endblock %}
