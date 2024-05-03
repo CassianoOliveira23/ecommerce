@@ -3,61 +3,168 @@
 {% load l10n %}
 
 {% block body %}
-    <h1>Store</h1>
+    
+    <div>
+        <ul>
+            Order by:   
+            <li><a href="#" class="order-item" name="max-price">Maximun Price</a></li>
+            <li><a href="#" class="order-item" name="min-price">Minimum Price</a></li>
+            <li><a href="#" class="order-item" name="best-sellers">Bestsellers</a></li>
+        <ul>
 
-    <div style="display:flex;">
-        <form method="POST" action="">
-            {% csrf_token %}
-            <p>Price</p>
-            <input type="number" name="min_price" value=
-            {% localize off %}
-            {{ min }}>
-            {% endlocalize %}
-            <input type="number" name="max_price" value=
-            {% localize off %}
-            {{ max }}>
-            {% endlocalize %}>
-    
-            <p>Size</p>
-            {% for size in sizes %}
-                <input type="radio" name="size" value="{{ size }}">
-                <label for="{{ size }}">{{ size }}</label>
-            {% endfor %}
-    
-            <p>Category</p>
-            {% for category in categories %}
-                <input type="radio" name="category" value="{{ category.slug }}">
-                <label for="{{ category.slug }}">{{ category.name }}</label>
-            {% endfor %}
-    
-            <p>Type</p>
-            {% for type in types_navbar %}
-                <input type="radio" name="type" value="{{ type.slug }}">
-                <label for="{{ type.slug }}">{{ type.name }}</label>
-            {% endfor %}
-    
-            <button type="submit">Apply filters</button>
-        </form>
-
-        <div>
-            <ul>
-                Order by:   
-                <li><a href="#" class="order-item" name="max-price">Maximun Price</a></li>
-                <li><a href="#" class="order-item" name="min-price">Minimum Price</a></li>
-                <li><a href="#" class="order-item" name="best-sellers">Bestsellers</a></li>
-            <ul>
-
-            {% for product in products %}
+        {% for product in products %}
             <a href="{% url 'see_product' product.id %}">
                 <img src="{{ product.image.url }}" width="300" heigth="450"> 
             </a>
-             
+                
             <p>Product: {{ product.name }}</p>
-            
+                
             <p>Price: {{ product.price }}</p>
         {% endfor %}
-        </div>
     </div>
 
+
    
+
+
+    <main class="principal principal--padding-b">
+        <section class="loja">
+          <form class="menu" method="POST" action="">
+            {% csrf_token %}
+            <div class="menu__cabecalho">
+              <div class="menu__titulos">
+                <div>
+                  <img
+                    class="menu__icone"
+                    src="{% static 'images/filter-big-1-svgrepo-com.svg' %}" 
+                    alt="Ícone filtrar"
+                  />
+                </div>
+                <p class="menu__titulo">Filtrar</p>
+              </div>
+  
+              <p class="menu__fechar-filtro">X</p>
+            </div>
+  
+            <div class="menu__preco">
+              <p class="menu__subtitulo">Faixa de Preço</p>
+  
+              <div class="range_container">
+                <div class="sliders_control">
+                  <input
+                    id="fromSlider"
+                    type="range"
+                    value=0
+                    min=0
+                    max={% localize off %}
+                    {{ max }}
+                    {% endlocalize %}/> 
+
+                  <input
+                    id="toSlider"
+                    type="range"
+                    value={% localize off %}
+                    {{ max }}
+                    {% endlocalize %}
+                    min=0
+                    max={% localize off %}
+                    {{ max }}
+                    {% endlocalize %}
+                  />
+                </div>
+  
+                <div class="menu__controles">
+                  <div class="form_control">
+                    <div class="form_control_container">
+                      <input
+                        class="form_control_container__time__input"
+                        type="number"
+                        id="fromInput"
+                        name="min_price"
+                        value=0
+                        min=0
+                        max={% localize off %}
+                        {{ max }}
+                        {% endlocalize %}
+                      />
+                    </div>
+                    <p>To</p>
+                    <div class="form_control_container">
+                      <input
+                        class="form_control_container__time__input"
+                        type="number"
+                        id="toInput"
+                        name="max_price"
+                        value={% localize off %}
+                        {{ max }}
+                        {% endlocalize %}
+                        min=0
+                        max={% localize off %}
+                        {{ max }}
+                        {% endlocalize %}
+                      />
+                    </div>
+                  </div>
+  
+                  <button type="submit" class="menu__botao">Filtrar</button>
+                </div>
+              </div>
+            </div>
+  
+  
+            <div class="menu__expansivel">
+              <div
+                class="menu__expansivel-cabecalho menu__expansivel-cabecalho--aberto"
+              >
+                <p class="menu__subtitulo">Tamanho</p>
+              </div>
+  
+              <div class="menu__expansivel-conteudo">
+                <div class="menu__tamanhos">
+                    {% for size in sizes %}
+                        <div class="menu__tamanho">
+                            <div class="menu__tamanho-quadrado">{{ size }}</div>
+                            <input
+                            class="menu__checkbox"
+                            type="radio"
+                            name="size"
+                            value="{{ size }}"
+                            />
+                        </div>
+                    {% endfor %}
+
+                </div>
+              </div>
+            </div>
+  
+            <div class="menu__expansivel">
+              <div
+                class="menu__expansivel-cabecalho menu__expansivel-cabecalho--aberto"
+              >
+                <p class="menu__subtitulo">Type</p>
+              </div>
+  
+              <div class="menu__expansivel-conteudo">
+                <div class="menu__categorias">
+                    {% for type in types_navbar %}
+                        <div class="menu__categoria">
+                            <div class="menu__categoria-quadrado"></div>
+                            <div class="menu__categoria-texto">{{ type.name }}</div>
+                            <input
+                                class="menu__checkbox"
+                                type="radio"
+                                name="type"
+                                value="{{ type.slug }}"
+                            />
+                        </div>
+                    {% endfor %}
+                   
+                </div>
+              </div>
+            </div>
+          </form>
+  
+        
+        </section>
+      </main>
 {% endblock %}
