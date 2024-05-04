@@ -3,30 +3,6 @@
 {% load l10n %}
 
 {% block body %}
-    
-    <div>
-        <ul>
-            Order by:   
-            <li><a href="#" class="order-item" name="max-price">Maximun Price</a></li>
-            <li><a href="#" class="order-item" name="min-price">Minimum Price</a></li>
-            <li><a href="#" class="order-item" name="best-sellers">Bestsellers</a></li>
-        <ul>
-
-        {% for product in products %}
-            <a href="{% url 'see_product' product.id %}">
-                <img src="{{ product.image.url }}" width="300" heigth="450"> 
-            </a>
-                
-            <p>Product: {{ product.name }}</p>
-                
-            <p>Price: {{ product.price }}</p>
-        {% endfor %}
-    </div>
-
-
-   
-
-
     <main class="principal principal--padding-b">
         <section class="loja">
           <form class="menu" method="POST" action="">
@@ -163,8 +139,54 @@
               </div>
             </div>
           </form>
+          
+
+          <div class="produtos">
+            <div class="produtos__cabecalho">
+              <button class="produtos__cabecalho-filtrar">Filtrar</button>
   
+              <div class="produtos__cabecalho-ordenarpor">
+                <div class="produtos__cabecalho-imgicone">
+                  <img
+                    class="produtos__cabecalho-icone"
+                    src="{% static 'images/sort-vertical-svgrepo-com.svg'%}"
+                    alt=""
+                  />
+                </div>
+                <p class="produtos__subtitulo">Ordenar por:</p>
+                <select class="produtos__select" onchange="redirectToPage()">
+                  <option  value="">Select an option</option>
+                  <option class="order-item" value="max-price">Highest Price</option>
+                  <option  class="order-item" value="min-price">Lowest Price</option>
+                  <option  class="order-item" value="best-sellers">Bestsellers</option>
+                </select>
+              </div>
+  
+            </div>
+  
+            <div class="produtos__grade">
+              {% for product in products %}
+                <a
+                  href="{% url 'see_product' product.id %}"
+                  class="produto">
+                  <div class="produto__imagem">
+                    <img
+                      src="{{ product.image.url }}"
+                      alt="Imagem do Produto"
+                    />
+                  </div>
+    
+                  <div class="produto__textos">
+                    <p class="produto__titulo">{{ product.name }}</p>
+                    <div class="produto__preco">
+                      <p class="produto__avista">US$ {{ product.price }}</p>  
+                    </div>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
         
         </section>
-      </main>
+    </main>
 {% endblock %}

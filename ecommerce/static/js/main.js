@@ -4,6 +4,6 @@ var items = document.getElementsByClassName("order-item")
 
 for(i=0; i < items.length; i++){
     items[i]
-    url.searchParams.set("order", items[i].name); 
-    items[i].href = url.href;
+    url.searchParams.set("order", items[i].value); 
+    items[i].value = url.href;
 }
