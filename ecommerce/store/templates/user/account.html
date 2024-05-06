@@ -2,58 +2,91 @@
 {% load static %}
 
 {% block body %}
-    <h1>My account</h1>
+    <main class="principal">
+        <section class="conta">
+            {% if changed %}
+                <p>Changes Saved Successfully!</p>
+            {% endif %}
 
-    <a href="{% url 'my_orders' %}">My orders</a>
+            {% if error == "invalid_form" %}
+                <p>Invalid form, try again later.</p>
+            {% endif %}
 
-    <a href="{% url 'to_log_out' %}">logout</a>
+          <div class="conta__container">
+            <div class="checkout__titulos">
+              <p class="checkout__titulo">Personal details</p>
+            </div>
 
-    {% if changed %}
-        <p>Changes Saved Successfully!</p>
-    {% endif %}
+            {% if error == "existing_email" %}
+                <p>There is already a user with this email.</p>
+            {% endif %}
+  
+            <form
+              class="conta__form"
+              action="{% url 'account' %}"
+              method="post">
+              {% csrf_token %}
+              <div class="conta__item conta__item--email">
+                <label for="name">Name</label>
+                <input name="name" type="text" placeholder="Complete Name"
+                {% if request.user.customer.name %}
+                    value="{{ request.user.customer.name }}"
+                {% endif %} />
+              </div>
+  
+              <div class="conta__item conta__item--email">
+                <label for="email">E-mail</label>
+                <input name="email" type="email" placeholder="E-mail" value="{{ request.user.email }}" />
+              </div>
+  
+              <div class="conta__item conta__item--email">
+                <label for="phone">Phone</label>
+                <input name="phone" type="number" placeholder="phone" value="{{ request.user.customer.fone }}" />
+              </div>
+  
+              <button class="subtotal__botao" type="submit">Update</button>
+            </form>
+          </div>
 
-    {% if error == "incorrect_password" %}
-        <p>Incorrect Password</p>
-    {% endif %}
 
-    {% if error == "imcompatible_passwords" %}
-        <p>New Password and Comfirm Password do not match</p>
-    {% endif %}
 
-    {% if error == "existing_email" %}
-        <p>There is already a user with this email.</p>
-    {% endif %}
+          <div class="conta__container">
+            <div class="checkout__titulos">
+              <p class="checkout__titulo">Change Password</p>
+            </div>
 
-    {% if error == "invalid_form" %}
-        <p>Invalid form, try again later.</p>
-    {% endif %}
+            {% if error == "incorrect_password" %}
+                <p>Incorrect Password</p>
+            {% endif %}
 
-    <h3>My registration details<h3>
-    <form method="POST" action="{% url 'account' %}">
-        {% csrf_token %}
-        <input type="text" name="name" placeholder="Complete Name"
-        {% if request.user.customer.name %}
-            value="{{ request.user.customer.name }}"
-        {% endif %}>
-        <br>
-        <input type="email" name="email" placeholder="E-mail" value="{{ request.user.email }}">
-        <br>
-        <input type="number" name="fone" placeholder="fone" value="{{ request.user.customer.fone }}">
-        <br>
-        <button type="submit">Update</button>
-    </form>
-    <br>
-    <br>
-    <h3>Change password<h3>
-    <form method="POST" action="{% url 'account' %}">
-        {% csrf_token %}
-        <input type="password" name="current_password" placeholder="Current password">
-        <br>
-        <input type="password" name="new_password" placeholder="New password">
-        <br>
-        <input type="password" name="confirm_password" placeholder="Re-enter password">
-        <br>
-        <button type="submit">Update password</button>
-    </form>
+            {% if error == "imcompatible_passwords" %}
+                <p>New Password and Comfirm Password do not match</p>
+            {% endif %}
+    
+            <form
+              class="conta__form"
+              action="{% url 'account' %}"
+              method="post">
+              {% csrf_token %}
+              <div class="conta__item conta__item--email">
+                <label for="current_password">Current Password</label>
+                <input name="current_password" type="password" />
+              </div>
+
+              <div class="conta__item conta__item--email">
+                <label for="new_password">New Password</label>
+                <input name="new_password" type="password" />
+              </div>
+
+              <div class="conta__item conta__item--email">
+                <label for="confirm_password">Comfirm New Password</label>
+                <input name="confirm_password" type="password" />
+              </div>
+  
+              <button class="subtotal__botao" type="submit">Update</button>
+            </form>
+          </div>
+        </section>
+    </main>
 
 {% endblock %}

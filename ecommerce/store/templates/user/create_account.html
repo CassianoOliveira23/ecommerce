@@ -2,34 +2,57 @@
 {% load static %}
 
 {% block body %}
-    <h1>Fill out the form to create an account</h1>
+   <main class="principal">
+      <section class="conta">
+         <div class="conta__container">
+            <div class="checkout__titulos">
+               <p class="checkout__titulo">Fill in the fields to create an account.</p>
+            </div>
 
-    {% if error == "to_fill" %}
-       <p>Fill out the form fields correctly to create an account</p>
-    {% endif %}
+            {% if error == "to_fill" %}
+               <p>Fill out the form fields correctly to create an account</p>
+            {% endif %}
 
-    {% if error == "invalid_email" %}
-       <p>Invalid E-mail</p>
-    {% endif %}
+            {% if error == "invalid_email" %}
+                <p>Invalid E-mail</p>
+            {% endif %}
 
-    {% if error == "existing_user" %}
-       <p>There is already a user with this email.<a href="{% url 'to_sign_in' %}">Login</a></p>
-    {% endif %}
+            {% if error == "existing_user" %}
+               <p>There is already a user with this email.<a href="{% url 'to_sign_in' %}">Login</a></p>
+            {% endif %}
 
-    {% if error == "imcompatible_passwords" %}
-       <p>Password and Re-enter password do not match</p>
-    {% endif %}
+            {% if error == "imcompatible_passwords" %}
+               <p>Password and Re-enter password do not match</p>
+            {% endif %}
+     
+                 
+       
+            <form
+               class="conta__form"
+               action="{% url 'create_account' %}"
+               method="post">
+               {% csrf_token %}
+       
+               <div class="conta__item conta__item--email">
+                  <label for="email">E-mail</label>
+                  <input name="email" type="email" placeholder="E-mail" />
+               </div>
+       
+               <div class="conta__item conta__item--email">
+                  <label for="password">Password</label>
+                  <input name="password" type="password" placeholder="Password" />
+               </div>
 
-    <form method="POST" action="{% url 'create_account' %}"> 
-        {% csrf_token %}
-        <input type="email" name="email" placeholder="E-mail">
-        <br>
-        <input type="password" name="password" placeholder="Password">
-        <br>
-        <input type="password" name="password_comfirm" placeholder="Re-enter password">
-        <br>
-        <button type="submit">Create My Account<button>
-    </form>
-
-    <a href="{% url 'to_sign_in' %}">You already have an account? Click here to Login<a>
+               <div class="conta__item conta__item--email">
+                  <label for="password_comfirm">Comfirm Password</label>
+                  <input name="password_comfirm" type="password" placeholder="Re-enter password" />
+               </div>
+       
+               <button class="subtotal__botao" type="submit">Create Account</button>
+            </form>
+ 
+               <a href="{% url 'to_sign_in' %}">You already have an account? Click here to Login<a>
+         </div>
+      </section>
+   </main>
 {% endblock %}

@@ -62,7 +62,8 @@ def see_product(request, id_product, id_color=None):
         if id_color:
             stok_item = StokItem.objects.filter(product=product, quantity__gt=0, color__id=id_color)
             sizes = { item.size for item in stok_item }
-    context = {"product": product, "there_is_stok": there_is_stok, "colors": colors, "sizes": sizes, "selected_color": selected_color}
+    similars = Product.objects.filter(category__id=product.category.id, type__id=product.type.id).exclude(id=product.id)[:4]
+    context = {"product": product, "there_is_stok": there_is_stok, "colors": colors, "sizes": sizes, "selected_color": selected_color, "similars": similars}
     return render(request,'see_product.html', context)
 
 
@@ -286,9 +287,8 @@ def account(request):
             else:
                 error = "imcompatible_passwords"
         elif 'email' in data:
-            #changing personal information
             email = data.get("email")
-            fone = data.get("fone")
+            fone = data.get("phone")
             name = data.get("name")
             if email != request.user.email:
                 users = User.objects.filter(email=email)

@@ -103,91 +103,34 @@
             </div>
           </div>
         </section>
-  
-        <section class="similares">
-          <h2 class="similares__titulo">
-            Gostou desse produto? Veja itens similares
-          </h2>
-  
-          <div class="similares__container">
-            <a
-              href="https://www.usereserva.com/camiseta-silk-folhagem0078068/p?skuId=499434"
-              class="produto"
-            >
-              <div class="produto__imagem">
-                <img
-                  src="https://lojausereserva.vtexassets.com/arquivos/ids/8404940-2400-auto?v=638358284054500000&width=2400&height=auto&aspect=true"
-                  alt="Imagem do Produto"
-                />
+        
+        {% if similars %}
+            <section class="similares">
+              <h2 class="similares__titulo">
+                Do you like this product? See similar items.
+              </h2>
+      
+              <div class="similares__container">
+                  {% for similar in similars %}
+                    <a
+                      href="{% url 'see_product' similar.id %}"
+                      class="produto" >
+                      <div class="produto__imagem">
+                        <img
+                          src="{{ similar.image.url }}"
+                          alt="Imagem do Produto"
+                        />
+                      </div>
+                      <div class="produto__textos">
+                        <p class="produto__titulo">{{ similar.name }}</p>
+                        <div class="produto__preco">
+                          <p class="produto__avista">US$ {{ similar.price }}</p>
+                        </div>
+                      </div>
+                    </a>
+                  {% endfor %}
               </div>
-              <div class="produto__textos">
-                <p class="produto__titulo">Camiseta Silk Folhagem</p>
-                <div class="produto__preco">
-                  <p class="produto__avista">R$ 349<sup>,00</sup></p>
-                  <p class="produto__parcelado">5x R$ 69<sup>,80</sup></p>
-                </div>
-              </div>
-            </a>
-  
-            <a
-              href="https://www.usereserva.com/camiseta-silk-folhagem0078068/p?skuId=499434"
-              class="produto"
-            >
-              <div class="produto__imagem">
-                <img
-                  src="https://lojausereserva.vtexassets.com/arquivos/ids/8404940-2400-auto?v=638358284054500000&width=2400&height=auto&aspect=true"
-                  alt="Imagem do Produto"
-                />
-              </div>
-              <div class="produto__textos">
-                <p class="produto__titulo">Camiseta Silk Folhagem</p>
-                <div class="produto__preco">
-                  <p class="produto__avista">R$ 349<sup>,00</sup></p>
-                  <p class="produto__parcelado">5x R$ 69<sup>,80</sup></p>
-                </div>
-              </div>
-            </a>
-  
-            <a
-              href="https://www.usereserva.com/camiseta-silk-folhagem0078068/p?skuId=499434"
-              class="produto"
-            >
-              <div class="produto__imagem">
-                <img
-                  src="https://lojausereserva.vtexassets.com/arquivos/ids/8404940-2400-auto?v=638358284054500000&width=2400&height=auto&aspect=true"
-                  alt="Imagem do Produto"
-                />
-              </div>
-              <div class="produto__textos">
-                <p class="produto__titulo">Camiseta Silk Folhagem</p>
-                <div class="produto__preco">
-                  <p class="produto__avista">R$ 349<sup>,00</sup></p>
-                  <p class="produto__parcelado">5x R$ 69<sup>,80</sup></p>
-                </div>
-              </div>
-            </a>
-  
-            <a
-              href="https://www.usereserva.com/camiseta-silk-folhagem0078068/p?skuId=499434"
-              class="produto"
-            >
-              <div class="produto__imagem">
-                <img
-                  src="https://lojausereserva.vtexassets.com/arquivos/ids/8404940-2400-auto?v=638358284054500000&width=2400&height=auto&aspect=true"
-                  alt="Imagem do Produto"
-                />
-              </div>
-              <div class="produto__textos">
-                <p class="produto__titulo">Camiseta Silk Folhagem</p>
-                <div class="produto__preco">
-                  <p class="produto__avista">R$ 349<sup>,00</sup></p>
-                  <p class="produto__parcelado">5x R$ 69<sup>,80</sup></p>
-                </div>
-              </div>
-            </a>
-          </div>
-        </section>
+            </section>
+        {% endif %}
       </main>
-
-   
 {% endblock %}
