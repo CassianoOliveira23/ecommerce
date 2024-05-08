@@ -2,25 +2,56 @@
 {% load static %}
 
 {% block body %}
-    <h1>My Orders</h1>
-
-    <a href="{% url 'account' %}">My account</a>
-
-    {% for order in orders %}
-        <div style="display: flex;">
-            <p>Date: {{ order.comlete_date }} </p>
-            <p>ID Order: {{ order.id }} </p>
-            <p>Code Transaction: {{ order.transaction_code }} </p>
-            <p>Total: {{ order.total_price }} </p>
-            <p>Address: {{ order.address.postal_code }}, {{ order.address.city }}, {{ order.address.state }}, {{ order.address.street }}, {{ order.address.number }}</p>
+    <main class="principal">
+        <section class="conta">
+            <div class="conta__container">
+                <div class="checkout__titulos">My Orders</p>
+                </div>
+                
+                {% for order in orders %}
+                    <div class="pedido">
+                        <div class="pedido__cabecalho">
+                            <div>
+                            <p><b>Order date</b></p>
+                            <p>{{ order.comlete_date }}</p>
+                            </div>
             
-            {% for item in order.items %}
-                <img src={{ item.stok_item.product.image.url }} width="50px">
-                <p>Product: {{ item.stok_item.product.name }}</p>
-                <p>Amount: {{ item.quantity }}</p>
-                <p>Total: {{ item.total_price }}</p>
-            {% endfor %}
-        </div>
-        <hr>
-    {% endfor %}
+                            <div>
+                            <p><b>Total</b></p>
+                            <p>US$ {{ order.total_price }}</p>
+                            </div>
+            
+                            <div>
+                            <p><b>Order number</b></p>
+                            <p>{{ order.transaction_code }}</p>
+                            </div>
+                        </div>
+            
+                        <div class="pedido__corpo">
+                            <div>
+                                {% for item in order.items %}
+                                <div class="tabela__imagem">
+                                    <img
+                                        src="{{ item.stok_item.product.image.url }}"
+                                        alt="{{ item.stok_item.product.name }}"
+                                    />
+                                </div>
+
+                                <div class="tabela__produto-textos">
+                                    <p><b>{{ item.stok_item.product.name }}</b></p>
+                                    <p><b>Amount: </b>{{ item.quantity }}</p>
+                                    <p><b>Total: </b> {{ item.total_price }}</p>
+                                    <!--<p><b>Size: </b> {{ item. }}</p>
+                                    <p><b>Color: </b>{{ item. }}</p>-->
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        <p style="margin: 15px;"> Delivery Address: {{ order.address.postal_code }}, {{ order.address.city }}, {{ order.address.state }}, {{ order.address.street }}, {{ order.address.number }}</p>
+                    </div>
+                {% endfor  %}
+
+            </div>
+        </section>
+    </main>
 {% endblock %}
