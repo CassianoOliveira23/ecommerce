@@ -2,52 +2,179 @@
 {% load static %}
 
 {% block body %}
-    <h1>Checkout</h1>
+    <main class="principal">
+        <section class="secao-checkout">
+          <a href="{% url 'cart' %}" class="checkout__botao">Back to the Cart</a>
+  
+          <div class="checkout">
+            {% if error %}
+                {% if error == "price" %}
+                    <p>The price of the products is incorrect. Try again or go back to the cart.</p>
+                {% endif %}
 
-    <a href="{% url 'cart' %}">Back to the Cart</a>
+                {% if error == "address" %}
+                    <p>Select the delivery address to continue</p>
+                {% endif %}
 
-    <p>Order's Number: {{ order.id }}</p>
-    <p>Order's Total: {{ order.total_price }}</p>
-    <p>Total Products: {{ order.total_quantity }}</p>
-
-    {% if error %}
-        {% if error == "price" %}
-            <p>The price of the products is incorrect. Try again or go back to the cart.</p>
-        {% endif %}
-
-        {% if error == "address" %}
-            <p>Select the delivery address to continue</p>
-        {% endif %}
-
-        {% if error == "email" %}
-            <p>Please fill in the email field to confirm your purchase</p>
-        {% endif %}
-    {% endif %}
-
-    <form method="POST" action="{% url 'complete_order' order.id %}">
-        {% csrf_token %}
-        <h4>Select delivery address:</h4>
-        <a href="{% url 'add_address' %}">Add delivery address</a>
-        <br>
-        {% for address in addresses  %}
-            <input type="radio" name="address" value="{{ address.id }}">
-            <label for="{{ address.id }}">{{ address.city }}-{{ address.state }}, {{ address.street }}, {{ address.number }}, {{ address.complement }} - {{ address.postal_code }}</label>
-            <br>
-        {% endfor %}
+                {% if error == "email" %}
+                    <p>Please fill in the email field to confirm your purchase</p>
+                {% endif %}
+            {% endif %}
+            
+            <form
+              class="checkout__form"
+              action="{% url 'complete_order' order.id %}"
+              method="post"
+            >
+                {% csrf_token %}
+              <!-- Adicionar a classe 'checkout__secao-entrega-login--logado' na div abaixo quando o usuário estiver logado -->
+                {% if not request.user.is_authenticated %}
+                    <div class="checkout__secao-entrega-login ">
+                        <div class="checkout__secao-login">
+                            <div class="checkout__titulos">
+                                <p class="checkout__titulo">Identify yourself</p>
+                            </div>
+            
+                            <div class="checkout__endereco-item">
+                                <label for="email">E-mail</label>
+                                <input name="email" type="email" />
+                            </div>
+                        </div>
+            
+                        <div class="checkout__secao-entrega">
+                            <div class="checkout__titulos">
+                                <p class="checkout__titulo">Delivery Address</p>
+                                <a
+                                    class="checkout__botao checkout__botao--entrega"
+                                    type="button"
+                                    href="{% url 'add_address' %}"
+                                >
+                                    Add delivery address
+                                </a>
+                            </div>
+            
+                            <div class="checkout__endereco-cadastrado">
+                                {% for address in addresses  %}
+                                    <div class="checkout__pagamento-item">
+                                        <input type="radio" name="address" value="{{ address.id }}" />
+                                        <label for="{{ address.id }}">
+                                            {{ address.street }}, {{ address.number }}, {{ address.complement }}, Postal code: {{ address.postal_code }}, {{ address.city }}-{{ address.state }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="checkout__secao-entrega-login checkout__secao-entrega-login--logado">
+                        <div class="checkout__secao-entrega">
+                            <div class="checkout__titulos">
+                                <p class="checkout__titulo">Delivery Address</p>
+                                <a
+                                    class="checkout__botao checkout__botao--entrega"
+                                    type="button"
+                                    href="{% url 'add_address' %}"
+                                >
+                                    Add delivery address
+                                </a>
+                            </div>
+            
+                            <div class="checkout__endereco-cadastrado">
+                                {% for address in addresses  %}
+                                    <div class="checkout__pagamento-item">
+                                        <input type="radio" name="address" value="{{ address.id }}" />
+                                        <label for="{{ address.id }}">
+                                            {{ address.street }}, {{ address.number }}, {{ address.complement }}, Postal code: {{ address.postal_code }}, {{ address.city }}-{{ address.state }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
         
+                        <div class="checkout__endereco">
+                            <div class="checkout__endereco-item">
+                            <label for="cep">Postal Code</label>
+                            <input name="cep" type="number" />
+                            </div>
+        
+                            <div class="checkout__endereco-item">
+                            <label for="endereco">Address</label>
+                            <input name="endereco" type="text" />
+                            </div>
+        
+                            <div class="checkout__endereco-item">
+                            <label for="numero">Number</label>
+                            <input name="numero" type="number" />
+                            </div>
+        
+                            <div class="checkout__endereco-item">
+                            <label for="complemento">Complement</label>
+                            <input
+                                name="complemento"
+                                type="text"
+                                placeholder="Opcional"
+                            />
+                            </div>
+        
+                            <div class="checkout__endereco-item">
+                            <label for="cidade">City</label>
+                            <input name="cidade" type="text" />
+                            </div>
+        
+                            <div class="checkout__endereco-item">
+                            <label for="uf">State</label>
+                            <input name="uf" type="text" />
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                {% endif %}
 
-        {% if not request.user.is_authenticated %}
-            <hr>
-            <h4>Fill in your email to complete the order.</h4>
-            <input type="email" name="email" placeholder="e-mail">
-        {% endif %}
-
-        <hr>
-
-        <input type="hidden" value="{{ order.total_price }}" name="total">
-        <button type="submit">Complete the order  - US$ {{ order.total_price }}</button>
-    </form>
+                <div class="checkout__secao-pagamento-infos">
+                    <div class="checkout__secao-pagamento">
+                        <div class="checkout__titulos">
+                            <p class="checkout__titulo">Forms of Payment</p>
+                        </div>
     
+                        <div class="checkout__pagamento-formas">
+                            <div class="checkout__pagamento-item">
+                                <p for="cartao_credito">Credit Card</p>
+                            </div>
+        
+                            <div class="checkout__pagamento-item">
+                                <p  for="boleto">Invoice</p>
+                            </div>
+        
+                            <div class="checkout__pagamento-item">
+                                <p  for="pix">PIX</p>
+                            </div>
 
+                        </div>
+                    </div>
+    
+                    <div class="checkout__secao-infos">
+                        <div class="checkout__titulos checkout__titulos--mb">
+                            <p class="checkout__titulo">Purchase summary</p>
+                        </div>
+    
+                        <div class="subtotal__infos">
+                            <p>Amount of Products</p>
+                            <p>{{ order.total_quantity }}</p>
+                        </div>
+    
+                        <div class="subtotal__infos subtotal__infos--sborda">
+                            <p>Total</p>
+                            <p>US$ {{ order.total_price }}</p>
+                        </div>
+                        <input type="hidden" value="{{ order.total_price }}" name="total">
+                        <button class="subtotal__botao" type="submit">
+                            Complete Order
+                        </button>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </section>
+    </main>
 {% endblock %}
 

@@ -2,20 +2,39 @@
 {% load static %}
 
 {% block body %}
-    <h1>Manage Store</h1>
+    <main class="principal">
+        <section class="conta">
+            <div class="conta__container">
+                <div class="checkout__titulos">
+                    <p class="checkout__titulo">Key Indicators</p>
+                </div>
+                <p>Monthly Billing:  USS {{ billing }}</p>
+                <p>Sold Products: {{ amount_products }}</p>
+                <p>Total orders: {{ amount_orders }}</p>
+            </div>
 
-    <p>Monthly Billing: {{ billing }}</p>
-    <p>Sold Products: {{ amount_products }}</p>
-    <p>Total orders: {{ amount_orders }}</p>
 
-    <hr>
-    <h3>Export Reports</h3>
-
-    <a href="{% url 'export_report' 'order' %}">Export Orders</a>
-
-    <a href="{% url 'export_report' 'customer' %}">Export Customers</a>
-
-    <a href="{% url 'export_report' 'address' %}">Export Address</a>
+            <div class="conta__container">
+                <div class="checkout__titulos">
+                    <p class="checkout__titulo">Export Reports</p>
+                </div>
     
+                {% if error %}
+                    <h4>Invalid credentials, try again or create an account</h4>
+                {% endif %}
 
+                <a class="subtotal__botao" href="{% url 'export_report' 'order' %}">
+                    Export Orders
+                </a>
+
+                <a class="subtotal__botao" href="{% url 'export_report' 'customer' %}">
+                    Export Customers
+                </a>
+
+                <a class="subtotal__botao" href="{% url 'export_report' 'address' %}">
+                    Export Address
+                </a>
+            </div>
+        </section>
+    </main>
 {% endblock %}

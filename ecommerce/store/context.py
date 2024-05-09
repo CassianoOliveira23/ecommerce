@@ -12,6 +12,7 @@ def cart(request):
             return{"items_cart": items_cart }
     
     order, created = Order.objects.get_or_create(customer=customer, done=False)
+    #order, created = Order.objects.filter(customer=customer, done=False)
     order_items = OrderItem.objects.filter(order=order)
     for item in order_items:
         items_cart += item.quantity

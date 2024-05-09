@@ -2,20 +2,56 @@
 {% load static %}
 
 {% block body %}
-    <h1>Add Address</h1>
-    <a href="{% url 'checkout' %}">Return to checkout</a>
+    <main class="principal">
+        <section class="conta">
+            <div class="conta__container">
+                <div class="checkout__titulos">
+                    <p class="checkout__titulo">Add a new delivery address</p>
+                </div>
 
-    <h3>Add a new delivery address<h3>
-    <form method="POST" action="{% url 'add_address' %}">
-        {% csrf_token %}
-        <input type="text" name="city" placeholder="City">
-        <input type="text" name="state" placeholder="State">
-        <input type="text" name="street" placeholder="Street">
-        <input type="number" name="number" placeholder="Number">
-        <input type="text" name="complement" placeholder="Complement">
-        <input type="number" name="postal_code" placeholder="Postal code">
+      
+                <form
+                  class="conta__form"
+                  action="{% url 'add_address' %}"
+                  method="post">
+                  {% csrf_token %}
+      
+                  <div class="conta__item ">
+                    <label for="city">City</label>
+                    <input name="city" type="text" placeholder="City" />
+                  </div>
 
-        <button type="submit">Add Address</button>
-    </form>
+                  <div class="conta__item ">
+                    <label for="state">State</label>
+                    <input name="state" type="text" placeholder="State" />
+                  </div>
+
+                  <div class="conta__item ">
+                    <label for="street">Street</label>
+                    <input name="street" type="text" placeholder="Street" />
+                  </div>
+
+                  <div class="conta__item ">
+                    <label for="number">Number</label>
+                    <input name="number" type="number" placeholder="Number" />
+                  </div>
+
+                  <div class="conta__item ">
+                    <label for="complement">Complement</label>
+                    <input name="complement" type="text"  placeholder="Complement" />
+                  </div>
+
+                  <div class="conta__item ">
+                    <label for="postal_code">Postal code</label>
+                    <input name="postal_code" type="number"  placeholder="Postal code" />
+                  </div>
+      
+                  <button class="subtotal__botao" type="submit">Add Address</button>
+                </form>
+
+                <a href="{% url 'checkout' %}">Return to checkout</a>
+            </div>
+        </section>
+    </main>
 {% endblock %}
 
