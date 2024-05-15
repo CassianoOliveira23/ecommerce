@@ -14,7 +14,7 @@
       <a href="{% url 'homepage' %}">
         <img
           src="https://lojausereserva.vtexassets.com/assets/vtex/assets-builder/lojausereserva.lojausereserva-theme/5.0.16/icons/logo-black-rsv___e6008150aa5a6134f9a0ae5fe52a06d3.svg"
-          alt="Logo da Reserva"
+          alt="Logo"
           class="cabecalho__logo"
         />
       </a>
@@ -23,31 +23,33 @@
         <ul class="cabecalho__lista">
             {% for category in categories_navbar %}
                 <li class="cabecalho__item-lista">
-                    <a
+                  <a
                     class="cabecalho__link"
-                    href="{% url 'store' %} {{ category.slug }}">{{ category.name }}</a>
+                    href="{% url 'store' %}{{ category.slug }}"
+                    >{{ category.name }}
+                  </a>
 
-                    <div class="cabecalho__expansao-tipos">
-                        <a
-                            class="cabecalho__imagem-link"
-                            href="https://www.usereserva.com/colecao-reserva/adulto-top-camisetas"
-                            ><img
-                            src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/a3e95dbb-4c70-4dfe-9dc9-8fb997e4887b___9eafa5e48e1c6ce4a9c97682c2249c53.jpg"
-                            alt="Imagem do menu secundário"
-                            class="cabecalho__imagem"/>
-                        </a>
+                  <div class="cabecalho__expansao-tipos">
+                      <a
+                          class="cabecalho__imagem-link"
+                          href="https://www.usereserva.com/colecao-reserva/adulto-top-camisetas"
+                          ><img
+                          src="https://lojausereserva.vtexassets.com/assets/vtex.file-manager-graphql/images/a3e95dbb-4c70-4dfe-9dc9-8fb997e4887b___9eafa5e48e1c6ce4a9c97682c2249c53.jpg"
+                          alt="Imagem do menu secundário"
+                          class="cabecalho__imagem"/>
+                      </a>
 
-                        <ul class="cabecalho__lista cabecalho__lista--tipo">
-                            {% for type in types_navbar %}
-                                <li>
-                                    <a
-                                        class="cabecalho__link cabecalho__link--tipo"
-                                        href="{% url 'store' %}{{ category.slug }}-{{ type.slug }}">{{ type.name  }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+                      <ul class="cabecalho__lista cabecalho__lista--tipo">
+                          {% for type in types_navbar %}
+                              <li>
+                                  <a
+                                      class="cabecalho__link cabecalho__link--tipo"
+                                      href="{% url 'store' %}{{ category.slug }}-{{ type.slug }}">{{ type.name  }}
+                                  </a>
+                              </li>
+                          {% endfor %}
+                      </ul>
+                  </div>
                 </li>
             {% endfor %}
         </ul>

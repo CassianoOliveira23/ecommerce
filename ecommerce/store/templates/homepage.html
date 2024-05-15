@@ -41,13 +41,13 @@
         </section>-->
   
         <section class="banner-grid">
-            {% for banner in banners %}
-                <a
-                    href="{% url 'store' %} {{ banner.link }}"
-                    class="banner-grid__imagem">
-                    <img src="{{ banner.image.url }}" alt="{{ banner.link }}"/>
-                </a>
-            {% endfor %}
+          {% for banner in banners %}
+            <a
+              href="{% url 'store' %}{{ banner.link }}"
+              class="banner-grid__imagem">
+              <img src="{{ banner.image.url }}" alt="{{ banner.link }}"/>
+            </a>
+          {% endfor %}
         </section>
   
         <!--<section class="banner-individual">

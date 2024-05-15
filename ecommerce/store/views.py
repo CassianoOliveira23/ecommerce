@@ -423,4 +423,4 @@ def export_report(request, report):
     
     
 #  When a customer create an account in our website we have to create a customer for him
-#  when you create an user account the username have to be equal to email 
+#  When creating a user account, the username must be the same as the email address.
